@@ -1,9 +1,5 @@
-import { Fragment } from "react"
+import { LoginPage } from "./pages/LoginPage"
 
 export const App = () => {
-  return (
-    <Fragment>
-      <h1>Portafolio</h1>
-    </Fragment>
-  )
+  return <LoginPage />
 }
