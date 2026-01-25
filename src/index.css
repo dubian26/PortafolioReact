@@ -7,6 +7,7 @@
 
 @theme {
   --spacing: 4px;
+  --color-primary: var(--primary-color);
 }
 
 @layer app {
@@ -14,9 +15,5 @@
     margin: 0;
     min-height: 100vh;
     background: linear-gradient(180deg, #2e323f, #0a061a);
-  }
-
-  .login-form {
-    @apply w-full min-h-screen flex flex-col items-center justify-center md:items-start bg-[url(/src/assets/bg-escamas.png)] bg-no-repeat bg-auto md:bg-contain px-[20%] py-[10%];
   }
 }

@@ -37,7 +37,7 @@ export const LoginForm = () => {
    return (
       <div className="w-10/12 max-w-72 flex flex-col gap-3">
          <IconField iconPosition="left">
-            <InputIcon className="pi pi-envelope" />
+            <InputIcon className="fa-solid fa-envelope" />
             <InputText
                placeholder="Email" value={email}
                disabled={loading} className="w-full"
@@ -45,7 +45,7 @@ export const LoginForm = () => {
             />
          </IconField>
          <IconField iconPosition="left">
-            <InputIcon className="pi pi-lock" />
+            <InputIcon className="fa-solid fa-lock" />
             <InputText
                type="password" placeholder="Password" value={password}
                disabled={loading} className="w-full"
