@@ -1,34 +1,43 @@
+import { Avatar } from "primereact/avatar"
 import { BreadCrumb } from "primereact/breadcrumb"
-import { type MenuItem } from "primereact/menuitem"
-import { useContext } from "react"
+import { OverlayPanel } from "primereact/overlaypanel"
+import { useContext, useRef } from "react"
+import perfilDubian from "../../assets/avatars/perfil-dubian26.png"
 import { AppContext } from "../../contexts/AppContext"
+import { OpcionesPanel } from "./OpcionesPanel"
 
 export const Topbar = () => {
     const appCtx = useContext(AppContext)
-    const items: MenuItem[] = [{ label: "Usuarios" }]
-    const home: MenuItem = { icon: "fa-solid fa-house", url: "http://localhost:5173/" }
+    const overlayUsua = useRef<OverlayPanel | null>(null)
 
     return (
-        <div className="flex justify-between items-center">
+        <div className="p-2 flex justify-between items-center">
             <BreadCrumb
-                model={items} home={home}
+                home={{ icon: "fa-solid fa-house", url: "/" }}
+                model={[{ label: "Usuarios" }]}
                 pt={{ root: { className: "border-0 bg-transparent" } }}
             />
             <nav className="w-52 shrink-0 flex justify-end gap-1">
                 <button
-                    onClick={() => appCtx.logout()}
+                    onClick={() => appCtx.mostrarError("Opción no implementada")}
                     className={`
                         size-10 min-w-10 rounded-full cursor-pointer
                         text-primary hover:bg-primary/10 fa-solid fa-bell
                     `}
                 />
                 <button
-                    onClick={() => appCtx.logout()}
+                    onClick={() => appCtx.mostrarError("Opción no implementada")}
                     className={`
                         size-10 min-w-10 rounded-full cursor-pointer
-                        text-primary hover:bg-primary/10 fa-solid fa-sign-out
+                        text-primary hover:bg-primary/10 fa-solid fa-sun
                     `}
                 />
+                <Avatar
+                    onClick={ev => overlayUsua.current?.toggle(ev)}
+                    image={perfilDubian}
+                    size="xlarge" shape="circle"
+                />
+                <OpcionesPanel ref={overlayUsua} />
             </nav>
         </div>
     )

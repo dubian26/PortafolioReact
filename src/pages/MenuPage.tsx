@@ -10,13 +10,11 @@ export const MenuPage = () => {
       { id: 2, icono: "fa-solid fa-user", texto: "Usuarios", alerta: false, ruta: "/usuarios" },
       { id: 3, icono: "fa-solid fa-warehouse", texto: "Inventario", alerta: true, ruta: "/inventario" },
       { id: 4, icono: "fa-solid fa-box", texto: "Ordenes", alerta: false, ruta: "/ordenes" },
-      { id: 5, icono: "fa-solid fa-receipt", texto: "Facturas", alerta: false, ruta: "/facturas" },
-      { id: 6, icono: "fa-solid fa-cog", texto: "Opciones", alerta: false, ruta: "/opciones" },
-      { id: 7, icono: "fa-solid fa-question-circle", texto: "Ayuda", alerta: false, ruta: "/ayuda" },
+      { id: 5, icono: "fa-solid fa-receipt", texto: "Facturas", alerta: false, ruta: "/facturas" }
    ]
 
    return (
-      <div className="flex h-screen bg-[#0f172a] text-white">
+      <div className="flex h-screen">
          <Sidebar>
             {
                menuItems.map(item => (
