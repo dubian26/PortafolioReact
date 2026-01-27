@@ -23,16 +23,22 @@ export const AppProvider = ({ children }: Props) => {
             setToken("")
             sessionStorage.tokenApi = ""
         },
-        mostrarError: (error: Error | string) => {
+        mostrarError: (error: CustomError | string) => {
             let message = ""
-            if (error instanceof CustomError) message = error.errorModel.message
-            else if (error instanceof Error) message = error.message
-            else message = error
+            if (typeof error === "string") message = error
+            else message = error.errorModel?.message || error.message || "Error desconocido"
 
             toast?.current?.show({
                 severity: "error",
-                summary: "Atentión!",
+                summary: "Atención!",
                 detail: message
+            })
+        },
+        mostrarExito: (mensaje: string) => {
+            toast?.current?.show({
+                severity: "success",
+                summary: "Éxito!",
+                detail: mensaje
             })
         }
     }), [token, toast])

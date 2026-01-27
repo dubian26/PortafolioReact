@@ -6,11 +6,13 @@ type Props = {
    login: (token: string) => void
    logout: () => void
    mostrarError: (error: CustomError | string) => void
+   mostrarExito: (mensaje: string) => void
 }
 
 export const AppContext = createContext<Props>({
    token: "",
    login: () => { },
    logout: () => { },
-   mostrarError: () => { }
+   mostrarError: () => { },
+   mostrarExito: () => { }
 })

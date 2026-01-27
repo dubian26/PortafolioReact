@@ -25,17 +25,9 @@ export const Topbar = () => {
                         text-primary hover:bg-primary/10 fa-solid fa-bell
                     `}
                 />
-                <button
-                    onClick={() => appCtx.mostrarError("Opción no implementada")}
-                    className={`
-                        size-10 min-w-10 rounded-full cursor-pointer
-                        text-primary hover:bg-primary/10 fa-solid fa-sun
-                    `}
-                />
                 <Avatar
                     onClick={ev => overlayUsua.current?.toggle(ev)}
-                    image={perfilDubian}
-                    size="xlarge" shape="circle"
+                    image={perfilDubian} size="xlarge" shape="circle"
                 />
                 <OpcionesPanel ref={overlayUsua} />
             </nav>

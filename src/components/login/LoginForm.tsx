@@ -1,10 +1,12 @@
 import { Button } from "primereact/button"
+import { Dialog } from "primereact/dialog"
 import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
 import { useContext, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
 import { fetchLogin } from "../../requests/fetchLogin"
+import { CrearCuenta } from "../cuenta/CrearCuenta"
 
 export const LoginForm = () => {
    // estados
@@ -12,6 +14,7 @@ export const LoginForm = () => {
    const [loading, setLoading] = useState(false)
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
+   const [visible, setVisible] = useState(false)
 
    // eventos
    const handleClickIngresar = () => {
@@ -59,12 +62,15 @@ export const LoginForm = () => {
          <div className="pt-4">
             <Button
                label="¿Olvidó su password?" link={true} size="small"
-               onClick={() => console.log("olvidó su password...")}
+               onClick={() => appCtx.mostrarError("Opción no implementada")}
             />
             <Button
                label="¿No tiene cuenta? Créela aquí" link={true} size="small"
-               onClick={() => console.log("crear cuenta...")}
+               onClick={() => setVisible(true)}
             />
+            <Dialog header="Crear cuenta" visible={visible} style={{ width: "50vw" }} onHide={() => { if (!visible) return; setVisible(false); }}>
+               <CrearCuenta />
+            </Dialog>
          </div>
       </div>
    )
