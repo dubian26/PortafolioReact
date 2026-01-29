@@ -1,17 +1,18 @@
 import { createContext } from "react"
 import { CustomError } from "../appconfig/CustomError"
+import { type InfoUsuaModel } from "../models/InfoUsuaModel"
 
 type Props = {
-   token: string
-   login: (token: string) => void
+   usuarioSesion: InfoUsuaModel | null
+   validarUsuarioSes: () => Promise<void>
    logout: () => void
    mostrarError: (error: CustomError | string) => void
    mostrarExito: (mensaje: string) => void
 }
 
 export const AppContext = createContext<Props>({
-   token: "",
-   login: () => { },
+   usuarioSesion: null,
+   validarUsuarioSes: () => Promise.resolve(),
    logout: () => { },
    mostrarError: () => { },
    mostrarExito: () => { }

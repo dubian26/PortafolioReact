@@ -9,9 +9,14 @@ type Props = {
 
 export const OpcionesPanel = ({ ref }: Props) => {
     const appCtx = useContext(AppContext)
+    const usuarioSesion = appCtx.usuarioSesion
 
     return (
         <OverlayPanel ref={ref}>
+            <div className="p-2">
+                <div className="font-bold">{usuarioSesion?.nombre}</div>
+                <div>{usuarioSesion?.email}</div>
+            </div>
             <Menu
                 pt={{ root: { className: "border-0 bg-transparent" } }}
                 model={[

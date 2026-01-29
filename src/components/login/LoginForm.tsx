@@ -5,7 +5,7 @@ import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
 import { useContext, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { fetchLogin } from "../../requests/fetchLogin"
+import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
 import { CrearCuenta } from "../cuenta/CrearCuenta"
 
 export const LoginForm = () => {
@@ -17,7 +17,7 @@ export const LoginForm = () => {
    const [visible, setVisible] = useState(false)
 
    // eventos
-   const handleClickIngresar = () => {
+   const handleClickIngresar = async () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(email)) {
          appCtx.mostrarError("Email no es válido")
@@ -31,10 +31,17 @@ export const LoginForm = () => {
       }
 
       setLoading(true)
-      fetchLogin({ email, password })
-         .then(result => appCtx.login(result))
-         .catch(error => appCtx.mostrarError(error))
-         .finally(() => setLoading(false))
+
+      try {
+         const token = await usuarioRepository.autenticar(email, password)
+         if (token === undefined) throw new Error("Usuario o password incorrecto")
+         sessionStorage.tokenApi = token
+         await appCtx.validarUsuarioSes()
+      } catch {
+         appCtx.mostrarError("Falló la autenticación")
+      } finally {
+         setLoading(false)
+      }
    }
 
    return (

@@ -1,9 +1,9 @@
-export type ErrorDetail = {
+export interface ErrorDetail {
    property: string
    message: string
 }
 
-export type ErrorModel = {
+export interface ErrorModel {
    type: string
    code: string
    message: string
