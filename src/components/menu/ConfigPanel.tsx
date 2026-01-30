@@ -7,7 +7,7 @@ type Props = {
     ref: RefObject<OverlayPanel | null>
 }
 
-export const OpcionesPanel = ({ ref }: Props) => {
+export const ConfigPanel = ({ ref }: Props) => {
     const appCtx = useContext(AppContext)
     const usuarioSesion = appCtx.usuarioSesion
 

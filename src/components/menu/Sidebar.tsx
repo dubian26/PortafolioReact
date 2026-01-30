@@ -1,7 +1,7 @@
 import { type OverlayPanel } from "primereact/overlaypanel"
 import { useMemo, useRef, useState, type ReactNode } from "react"
 import bgEscamas from "../../assets/bg-escamas.png"
-import { OpcionesPanel } from "./OpcionesPanel"
+import { ConfigPanel } from "./ConfigPanel"
 import { SidebarContext } from "./SidebarContext"
 
 type Props = {
@@ -55,7 +55,7 @@ export const Sidebar = ({ children }: Props) => {
                      fa-solid fa-cog size-10 min-w-10 rounded-full 
                      text-primary cursor-pointer hover:bg-primary/10"
                />
-               <OpcionesPanel ref={overlayUsua} />
+               <ConfigPanel ref={overlayUsua} />
             </div>
          </nav>
       </aside>

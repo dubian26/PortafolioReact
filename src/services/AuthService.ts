@@ -13,7 +13,7 @@ class AuthService {
       const jwt = await new SignJWT({ ...usuario })
          .setProtectedHeader({ alg: "HS256" })
          .setIssuedAt()
-         .setExpirationTime("2h")
+         .setExpirationTime("2min")
          .sign(this.secret)
 
       return jwt

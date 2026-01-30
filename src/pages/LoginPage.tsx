@@ -1,14 +1,14 @@
 import bgEscamas from "../assets/bg-escamas.png"
-import bgUnderwater from "../assets/bg-underwater.png"
+import bgTechBlue from "../assets/bg-tech-blue.png"
 import { LoginForm } from "../components/login/LoginForm"
 
 export const LoginPage = () => {
    return (
       <div className="flex min-h-screen">
          <div
-            style={{ backgroundImage: `url(${bgUnderwater})` }}
+            style={{ backgroundImage: `url(${bgTechBlue})` }}
             className="
-               hidden md:block md:w-[40%] lg:w-[50%] 
+               hidden md:block md:w-[30%] lg:w-[40%] 
                h-screen bg-cover bg-center bg-no-repeat"
          />
          <div className="grow h-screen">

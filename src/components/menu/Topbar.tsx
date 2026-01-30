@@ -4,7 +4,7 @@ import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useRef } from "react"
 import perfilDubian from "../../assets/avatars/perfil-dubian26.png"
 import { AppContext } from "../../contexts/AppContext"
-import { OpcionesPanel } from "./OpcionesPanel"
+import { ConfigPanel } from "./ConfigPanel"
 
 export const Topbar = () => {
     const appCtx = useContext(AppContext)
@@ -29,7 +29,7 @@ export const Topbar = () => {
                     onClick={ev => overlayUsua.current?.toggle(ev)}
                     image={perfilDubian} size="xlarge" shape="circle"
                 />
-                <OpcionesPanel ref={overlayUsua} />
+                <ConfigPanel ref={overlayUsua} />
             </nav>
         </div>
     )
