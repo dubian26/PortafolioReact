@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useMemo } from "react"
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import { AppContext } from "./contexts/AppContext"
 import { DashboardHome } from "./pages/DashboardHome"
@@ -7,10 +7,10 @@ import { MenuPage } from "./pages/MenuPage"
 import { UsuarioPage } from "./pages/UsuarioPage"
 
 export const App = () => {
-   const appCtx = useContext(AppContext)
-   const estaAutenti = appCtx.usuarioSesion !== null
+   const { usuarioSesion } = useContext(AppContext)
+   const estaAutenti = usuarioSesion !== null
 
-   const router = createBrowserRouter([
+   const router = useMemo(() => createBrowserRouter([
       {
          path: "/login",
          element: !estaAutenti ? <LoginPage /> : <Navigate to="/" replace />,
@@ -41,7 +41,7 @@ export const App = () => {
          path: "*",
          element: <Navigate to="/" replace />,
       },
-   ])
+   ]), [estaAutenti])
 
    return <RouterProvider router={router} />
 }

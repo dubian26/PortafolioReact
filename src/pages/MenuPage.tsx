@@ -1,18 +1,10 @@
-import { useContext, useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import { Sidebar } from "../components/menu/Sidebar"
 import { SidebarItem } from "../components/menu/SidebarItem"
 import { Topbar } from "../components/menu/Topbar"
-import { AppContext } from "../contexts/AppContext"
 import { type MenuModel } from "../models/MenuModel"
 
 export const MenuPage = () => {
-   const appCtx = useContext(AppContext)
-
-   useEffect(() => {
-      appCtx.validarUsuarioSes()
-   }, [appCtx])
-
    const menuItems: MenuModel[] = [
       { id: 1, icono: "fa-solid fa-chart-bar", texto: "Dashboard", alerta: false, ruta: "/dashboard" },
       { id: 2, icono: "fa-solid fa-user", texto: "Usuarios", alerta: false, ruta: "/usuarios" },
