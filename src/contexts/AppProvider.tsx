@@ -19,7 +19,8 @@ export const AppProvider = ({ children }: Props) => {
 
    const handleLogout = useCallback(() => {
       setUsuarioSes(null)
-      sessionStorage.tokenApi = ""
+      sessionStorage.accessToken = ""
+      sessionStorage.refreshToken = ""
    }, [])
 
    const handleTimeout = useCallback(() => {
@@ -35,9 +36,9 @@ export const AppProvider = ({ children }: Props) => {
    const context = useMemo(() => ({
       usuarioSesion: usuarioSes,
       validarUsuarioSes: async () => {
-         const token = sessionStorage.tokenApi
+         const token = sessionStorage.accessToken
          const usuario = await authService.verificarToken(token)
-         if (usuario === null) sessionStorage.tokenApi = ""
+         if (usuario === null) handleLogout()
          setUsuarioSes(usuario)
       },
       logout: () => handleLogout(),

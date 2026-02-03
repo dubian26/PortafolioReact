@@ -1,6 +1,10 @@
 import { SignJWT, jwtVerify } from "jose"
 import { type InfoUsuaModel } from "../models/InfoUsuaModel"
+import { EXP_ACCESS_TOKEN, EXP_REFRESH_TOKEN } from "../appconfig/Constants"
 
+/**
+ * Simular autenticación JSON Web Tokens (JWT).
+ */
 class AuthService {
    private secret: Uint8Array
 
@@ -10,10 +14,13 @@ class AuthService {
    }
 
    async generarToken(usuario: InfoUsuaModel) {
+      const expTime = usuario.tipo === "access" ?
+         EXP_ACCESS_TOKEN : EXP_REFRESH_TOKEN
+
       const jwt = await new SignJWT({ ...usuario })
          .setProtectedHeader({ alg: "HS256" })
          .setIssuedAt()
-         .setExpirationTime("5min")
+         .setExpirationTime(expTime)
          .sign(this.secret)
 
       return jwt

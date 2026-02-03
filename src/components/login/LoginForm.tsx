@@ -33,9 +33,10 @@ export const LoginForm = () => {
       setLoading(true)
 
       try {
-         const token = await usuarioRepository.autenticar(email, password)
-         if (token === undefined) throw new Error("Usuario o password incorrecto")
-         sessionStorage.tokenApi = token
+         const tokenModel = await usuarioRepository.autenticar(email, password)
+         if (tokenModel === undefined) throw new Error("Usuario o password incorrecto")
+         sessionStorage.accessToken = tokenModel.accessToken
+         sessionStorage.refreshToken = tokenModel.refreshToken
          await appCtx.validarUsuarioSes()
       } catch {
          appCtx.mostrarError("Falló la autenticación")

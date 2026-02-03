@@ -6,7 +6,7 @@ export class FetchUtility {
    static preRequest(params: unknown, method: string = "POST"): RequestInit {
       const defaultHeaders = {
          "Content-Type": "application/json",
-         "Authorization": `Bearer ${sessionStorage.tokenApi}`
+         "Authorization": `Bearer ${sessionStorage.accessToken}`
       }
 
       return {
