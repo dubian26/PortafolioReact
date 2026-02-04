@@ -1,12 +1,16 @@
 import { type TokenModel } from "../../models/TokenModel"
 import { type UsuarioModel } from "../../models/UsuarioModel"
 import { authService } from "../../services/AuthService"
-import { BaseRepository } from "../core/BaseRepository"
+import { type BaseDB } from "../core/BaseDB"
 import { dbProvider } from "../db.config"
 
-class UsuarioRepository extends BaseRepository<UsuarioModel> {
+class UsuarioRepository {
+   protected db: BaseDB
+   protected storeName: string
+
    constructor() {
-      super(dbProvider, "usuarios")
+      this.db = dbProvider
+      this.storeName = "usuarios"
    }
 
    async buscarPorEmail(email: string): Promise<UsuarioModel | undefined> {
@@ -49,6 +53,16 @@ class UsuarioRepository extends BaseRepository<UsuarioModel> {
          accessToken,
          refreshToken
       }
+   }
+
+   async listarTodos(): Promise<UsuarioModel[]> {
+      await authService.renovarToken() // me aseguro que accessToken sea vigente
+      const store = await this.db.getStore(this.storeName)
+      return new Promise((resolve, reject) => {
+         const request = store.getAll()
+         request.onsuccess = () => resolve(request.result as UsuarioModel[])
+         request.onerror = () => reject(request.error)
+      })
    }
 }
 
