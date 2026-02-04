@@ -16,4 +16,8 @@
     min-height: 100vh;
     background: linear-gradient(180deg, #2e323f, #0a061a);
   }
+
+  html {
+    font-size: 15px;
+  }
 }
