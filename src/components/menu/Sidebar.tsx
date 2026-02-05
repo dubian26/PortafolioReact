@@ -30,9 +30,12 @@ export const Sidebar = ({ children }: Props) => {
                      text-primary font-extrabold cursor-pointer 
                      overflow-hidden transition-all 
                      ${expanded ? "w-full" : "w-0"}`
-                  }>
-                  <i className="fa-solid fa-house" />
-                  <span className="pl-2">Menu</span>
+                  }
+               >
+                  <span className="px-3">
+                     <i className="fa-solid fa-bars" />
+                     <span className="ml-3">Menu</span>
+                  </span>
                </h1>
                <button
                   onClick={() => setExpanded(curr => !curr)}

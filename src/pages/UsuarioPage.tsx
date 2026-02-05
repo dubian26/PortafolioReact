@@ -4,8 +4,9 @@ import { DataTable, type DataTableFilterMeta } from "primereact/datatable"
 import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { dateUtility } from "../appconfig/DateUtility"
+import { HeaderText } from "../components/common/HeaderText"
 import { usuarioRepository } from "../db/repositories/UsuarioRepository"
 import { type UsuarioModel } from "../models/UsuarioModel"
 
@@ -46,15 +47,15 @@ export const UsuarioPage = () => {
 
    const renderHeader = () => {
       return (
-         <div className="flex justify-between items-center flex-wrap gap-4">
+         <div className="flex justify-between items-center flex-wrap gap-2">
             <h2 className="text-xl font-semibold text-white">Lista de Usuarios</h2>
             <IconField iconPosition="left">
-               <InputIcon className="pi pi-search" />
+               <InputIcon className="fa-solid fa-search" />
                <InputText
+                  placeholder="Buscar usuario..."
                   value={globalFilterValue}
                   onChange={onGlobalFilterChange}
-                  placeholder="Buscar usuario..."
-                  className="w-full sm:w-80"
+                  className="p-inputtext-sm w-full sm:w-80"
                />
             </IconField>
          </div>
@@ -62,9 +63,9 @@ export const UsuarioPage = () => {
    }
 
    return (
-      <div className="animate-fade-in p-4">
-         <h1 className="text-3xl font-bold mb-6 text-white">Gestión de Usuarios</h1>
-         <div className="card bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+      <Fragment>
+         <HeaderText>Gestión de Usuarios</HeaderText>
+         <div className="card">
             <DataTable
                value={usuarios}
                paginator
@@ -79,15 +80,15 @@ export const UsuarioPage = () => {
                className="p-datatable-sm"
                rowsPerPageOptions={[5, 10, 25, 50]}
                pt={{
-                  header: { className: "bg-transparent border-b border-white/10 p-6" },
+                  header: { className: "bg-transparent border-b border-white/10" },
                   wrapper: { className: "bg-transparent" },
                   thead: { className: "bg-white/5" },
                   column: {
-                     headerCell: { className: "bg-transparent text-gray-300 font-semibold border-b border-white/10 p-4" },
-                     bodyCell: { className: "text-gray-400 border-b border-white/5 p-4" }
+                     headerCell: { className: "bg-transparent text-gray-300 font-semibold border-b border-white/10 p-2" },
+                     bodyCell: { className: "text-gray-400 border-b border-white/5 p-2" }
                   },
                   paginator: {
-                     root: { className: "bg-transparent border-t border-white/10 p-4" }
+                     root: { className: "bg-transparent border-t border-white/10 p-2" }
                   }
                }}
             >
@@ -103,6 +104,6 @@ export const UsuarioPage = () => {
                />
             </DataTable>
          </div>
-      </div>
+      </Fragment>
    )
 }

@@ -6,7 +6,7 @@ import { type MenuModel } from "../models/MenuModel"
 
 export const MenuPage = () => {
    const menuItems: MenuModel[] = [
-      { id: 1, icono: "fa-solid fa-box", texto: "Contenido", alerta: true, ruta: "/contenido" },
+      { id: 1, icono: "fa-solid fa-house", texto: "Contenido", alerta: true, ruta: "/contenido" },
       { id: 2, icono: "fa-solid fa-chart-bar", texto: "Dashboard", alerta: false, ruta: "/dashboard" },
       { id: 3, icono: "fa-solid fa-user", texto: "Usuarios", alerta: false, ruta: "/usuarios" },
       { id: 4, icono: "fa-solid fa-warehouse", texto: "Inventario", alerta: false, ruta: "/inventario" },
@@ -31,7 +31,7 @@ export const MenuPage = () => {
          </Sidebar>
          <div className="flex-1 flex flex-col overflow-hidden">
             <Topbar />
-            <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+            <main className="flex-1 overflow-x-hidden overflow-y-auto px-6 py-2">
                <Outlet />
             </main>
          </div>

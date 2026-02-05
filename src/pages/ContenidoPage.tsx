@@ -1,49 +1,71 @@
-import { useContext, useEffect } from "react"
-import { AppContext } from "../contexts/AppContext"
+import { Fragment } from "react"
+import { HeaderText } from "../components/common/HeaderText"
+import { Card } from "primereact/card"
 
 export const ContenidoPage = () => {
-   const appCtx = useContext(AppContext)
-
-   useEffect(() => {
-      appCtx.validarUsuarioSes()
-   }, [appCtx])
+   const caracteristicas = [
+      {
+         descripcion: "Se usa la libreria primereact para el manejo de componentes de interfaz de usuario profesionales",
+         fecha: "2026-01-27 00:10"
+      },
+      {
+         descripcion: "Se usa IndexedDB para simular el backend, permitiendo que todas las transacciones se realicen de forma local",
+         fecha: "2026-01-26 21:39"
+      },
+      {
+         descripcion: "Se implemento una simulación de seguridad basada en accessToken y refreshToken (Silent Refresh)",
+         fecha: "2026-02-01 03:20"
+      },
+      {
+         descripcion: "Se agrego un componente de SessionTimeout para el control automático de la inactividad del usuario",
+         fecha: "2026-01-31 21:14"
+      },
+      {
+         descripcion: "Implementación de sistema de cambio de tema dinámico (Light/Dark Mode) con persistencia",
+         fecha: "2026-01-26 05:18"
+      },
+      {
+         descripcion: "Abstracción de la capa de datos utilizando el patrón Repository para mayor escalabilidad",
+         fecha: "2026-01-26 21:39"
+      },
+      {
+         descripcion: "Diseño responsivo y estética premium desarrollado íntegramente con Tailwind CSS v4",
+         fecha: "2026-01-24 05:12"
+      },
+      {
+         descripcion: "Gestión centralizada de autenticación y configuración global mediante Context API",
+         fecha: "2026-01-25 16:49"
+      }
+   ]
 
    return (
-      <div className="animate-fade-in text-center">
-         <div className="bg-primary/20 size-20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i className="fa-solid fa-rocket text-primary text-3xl"></i>
-         </div>
-         <h1 className="text-3xl font-bold mb-2 text-white">Bienvenido</h1>
-         <p className="text-gray-400 max-w-md mx-auto">
-            A continuación se describe cada una de las características de la aplicación.
+      <Fragment>
+         <HeaderText>Contenido</HeaderText>
+         <p className="text-lg mb-4">
+            Listado detallado de las funcionalidades y tecnologías desarrolladas en esta aplicación.
          </p>
-         <div className="mt-10">
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-               <div className="p-6">
-                  <h2 className="text-2xl font-bold mb-4 text-white">Características</h2>
-                  <ul className="text-left space-y-4">
-                     <li>
-                        <h3 className="text-xl font-semibold mb-2 text-white">Característica 1</h3>
-                        <p className="text-gray-400">
-                           Descripción de la característica 1.
-                        </p>
-                     </li>
-                     <li>
-                        <h3 className="text-xl font-semibold mb-2 text-white">Característica 2</h3>
-                        <p className="text-gray-400">
-                           Descripción de la característica 2.
-                        </p>
-                     </li>
-                     <li>
-                        <h3 className="text-xl font-semibold mb-2 text-white">Característica 3</h3>
-                        <p className="text-gray-400">
-                           Descripción de la característica 3.
-                        </p>
-                     </li>
-                  </ul>
-               </div>
-            </div>
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {
+               caracteristicas.map((item, index) => (
+                  <Card key={index}>
+                     <div className="flex items-start gap-3">
+                        <div className="shrink-0">
+                           <i className="fa-solid fa-check"></i>
+                        </div>
+                        <div className="grow">
+                           <div className="text-md leading-snug">
+                              {item.descripcion}
+                           </div>
+                           <div className="flex items-center gap-2 mt-3 text-sm font-medium text-gray-400 dark:text-gray-500">
+                              <i className="fa-solid fa-calendar-plus"></i>
+                              <span>Desarrollado: {item.fecha}</span>
+                           </div>
+                        </div>
+                     </div>
+                  </Card>
+               ))
+            }
          </div>
-      </div>
+      </Fragment>
    )
 }

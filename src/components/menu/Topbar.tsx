@@ -1,8 +1,6 @@
-import { Avatar } from "primereact/avatar"
 import { BreadCrumb } from "primereact/breadcrumb"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useRef } from "react"
-import perfilDubian from "../../assets/avatars/perfil-dubian26.png"
 import { AppContext } from "../../contexts/AppContext"
 import { ConfigPanel } from "./ConfigPanel"
 
@@ -20,14 +18,15 @@ export const Topbar = () => {
             <nav className="w-52 shrink-0 flex justify-end gap-1">
                 <button
                     onClick={() => appCtx.mostrarError("Opción no implementada")}
-                    className={`
-                        size-10 min-w-10 rounded-full cursor-pointer
-                        text-primary hover:bg-primary/10 fa-solid fa-bell
-                    `}
+                    className="
+                        size-10 min-w-10 rounded-full cursor-pointer 
+                        text-primary hover:bg-primary/10 fa-solid fa-bell"
                 />
-                <Avatar
+                <button
                     onClick={ev => overlayUsua.current?.toggle(ev)}
-                    image={perfilDubian} size="xlarge" shape="circle"
+                    className="
+                        size-10 min-w-10 rounded-full cursor-pointer 
+                        text-primary hover:bg-primary/10 fa-regular fa-user"
                 />
                 <ConfigPanel ref={overlayUsua} />
             </nav>

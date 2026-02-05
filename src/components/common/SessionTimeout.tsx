@@ -45,7 +45,7 @@ export const SessionTimeout = ({ onTimeout, warningSeconds, timeoutSeconds }: Pr
 
       setTiempoQueda(tiempoQueda)
 
-      if (transcurrido >= warningSeconds)
+      if (tiempoQueda <= warningSeconds)
          setMostrarAviso(true)
 
       if (tiempoQueda <= 0)
