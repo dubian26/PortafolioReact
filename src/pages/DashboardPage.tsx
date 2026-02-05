@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react"
 import { AppContext } from "../contexts/AppContext"
 
-export const DashboardHome = () => {
+export const DashboardPage = () => {
    const appCtx = useContext(AppContext)
 
    useEffect(() => {

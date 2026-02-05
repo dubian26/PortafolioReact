@@ -76,7 +76,9 @@ export const LoginForm = () => {
                label="¿No tiene cuenta? Créela aquí" link={true} size="small"
                onClick={() => setVisible(true)}
             />
-            <Dialog header="Crear cuenta" visible={visible} style={{ width: "50vw" }} onHide={() => { if (!visible) return; setVisible(false); }}>
+            <Dialog
+               header="Crear cuenta" visible={visible} className="w-10/12 md:w-3/4 xl:w-1/2"
+               onHide={() => { if (!visible) return; setVisible(false); }}>
                <CrearCuenta />
             </Dialog>
          </div>

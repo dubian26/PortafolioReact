@@ -24,6 +24,16 @@ class UsuarioRepository {
       })
    }
 
+   async buscarPorId(id: number | string): Promise<UsuarioModel | undefined> {
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName)
+      return new Promise((resolve, reject) => {
+         const request = store.get(id)
+         request.onsuccess = () => resolve(request.result as UsuarioModel)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
    async autenticar(email: string, password: string): Promise<TokenModel | undefined> {
       // Simular autenticacion:
       // este metodo en produccion tendria que consumir un end-point
@@ -56,11 +66,31 @@ class UsuarioRepository {
    }
 
    async listarTodos(): Promise<UsuarioModel[]> {
-      await authService.renovarToken() // me aseguro que accessToken sea vigente
+      await authService.renovarToken()
       const store = await this.db.getStore(this.storeName)
       return new Promise((resolve, reject) => {
          const request = store.getAll()
          request.onsuccess = () => resolve(request.result as UsuarioModel[])
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async agregar(item: UsuarioModel): Promise<number | string> {
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName, "readwrite")
+      return new Promise((resolve, reject) => {
+         const request = store.add(item)
+         request.onsuccess = () => resolve(request.result as number | string)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async actualizar(item: UsuarioModel): Promise<void> {
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName, "readwrite")
+      return new Promise((resolve, reject) => {
+         const request = store.put(item)
+         request.onsuccess = () => resolve()
          request.onerror = () => reject(request.error)
       })
    }

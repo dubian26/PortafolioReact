@@ -1,6 +1,7 @@
 
 import { Toast } from "primereact/toast"
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react"
+import { SESSION_TIMEOUT_SEG, SESSION_WARNING_SEG } from "../appconfig/Constants"
 import { CustomError } from "../appconfig/CustomError"
 import { SessionTimeout } from "../components/common/SessionTimeout"
 import { type InfoUsuaModel } from "../models/InfoUsuaModel"
@@ -69,8 +70,8 @@ export const AppProvider = ({ children }: Props) => {
             estaAutenti && (
                <SessionTimeout
                   onTimeout={handleTimeout}
-                  timeoutSeconds={30}
-                  warningSeconds={20}
+                  timeoutSeconds={SESSION_TIMEOUT_SEG}
+                  warningSeconds={SESSION_WARNING_SEG}
                />
             )
          }

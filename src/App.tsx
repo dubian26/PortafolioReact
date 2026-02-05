@@ -1,7 +1,8 @@
 import { useContext, useMemo } from "react"
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import { AppContext } from "./contexts/AppContext"
-import { DashboardHome } from "./pages/DashboardHome"
+import { ContenidoPage } from "./pages/ContenidoPage"
+import { DashboardPage } from "./pages/DashboardPage"
 import { LoginPage } from "./pages/LoginPage"
 import { MenuPage } from "./pages/MenuPage"
 import { UsuarioPage } from "./pages/UsuarioPage"
@@ -21,11 +22,15 @@ export const App = () => {
          children: [
             {
                index: true,
-               element: <Navigate to="/dashboard" replace />,
+               element: <Navigate to="/contenido" replace />,
+            },
+            {
+               path: "contenido",
+               element: <ContenidoPage />,
             },
             {
                path: "dashboard",
-               element: <DashboardHome />,
+               element: <DashboardPage />,
             },
             {
                path: "usuarios",
