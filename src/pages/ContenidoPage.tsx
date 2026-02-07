@@ -53,14 +53,13 @@ export const ContenidoPage = () => {
             Esta aplicación es una <b>demo</b> de un sistema de inventario
             para tiendas virtuales. Su objetivo es demostrar mis capacidades
             técnicas y experiencia como ingeniero de sistemas en el desarrollo
-            de aplicaciones web modernas.
-            Repositorio:&nbsp;
+            de aplicaciones web modernas.&nbsp;
             <a
                href="https://github.com/dubian26/PortafolioReact"
                target="_blank" rel="noopener noreferrer"
                className="underline font-bold">
-               https://github.com/dubian26/PortafolioReact
-            </a>.
+               Ir al repositorio GitHub.
+            </a>
          </p>
          <p className="text-lg mb-6">
             A continuacion se muestra un listado de las funcionalidades y

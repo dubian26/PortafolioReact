@@ -25,12 +25,6 @@ export const LoginForm = () => {
          return
       }
 
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/
-      if (!passwordRegex.test(password)) {
-         appCtx.mostrarError("Password debe tener al menos 7 caracteres, incluyendo letras y números")
-         return
-      }
-
       setLoading(true)
 
       try {
@@ -79,7 +73,7 @@ export const LoginForm = () => {
             />
             <Dialog
                header={<HeaderText>Crear cuenta</HeaderText>}
-               visible={visible} className="w-10/12 md:w-3/4 xl:w-1/2"
+               visible={visible} className="w-11/12 lg:w-3/4 xl:w-2/3"
                onHide={() => { if (!visible) return; setVisible(false); }}>
                <CrearCuenta />
             </Dialog>

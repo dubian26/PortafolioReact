@@ -11,7 +11,7 @@ export const LoginPage = () => {
 
    return (
       <Fragment>
-         <div className="fixed top-4 right-4 z-50">
+         <div className="absolute top-4 right-4 z-50">
             <Button
                icon="fa-solid fa-question" rounded={true}
                text={true} raised={true} aria-label="Ayuda"
@@ -19,7 +19,7 @@ export const LoginPage = () => {
             />
             <Dialog
                visible={visible} modal={true}
-               className="w-10/12 md:w-3/4 xl:w-1/2"
+               className="w-11/12 lg:w-3/4"
                onHide={() => setVisible(false)}>
                <ContenidoPage />
             </Dialog>
@@ -37,7 +37,7 @@ export const LoginPage = () => {
                   className="
                   w-full min-h-screen flex flex-col items-center 
                   justify-center md:items-start bg-no-repeat 
-                  bg-auto md:bg-contain px-[20%] py-[10%]"
+                  bg-auto md:bg-contain px-5 sm:px-[20%] py-[10%]"
                >
                   <LoginForm />
                </div>
