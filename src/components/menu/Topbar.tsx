@@ -1,4 +1,3 @@
-import { BreadCrumb } from "primereact/breadcrumb"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useRef } from "react"
 import { AppContext } from "../../contexts/AppContext"
@@ -10,11 +9,7 @@ export const Topbar = () => {
 
     return (
         <div className="p-2 flex justify-between items-center">
-            <BreadCrumb
-                home={{ icon: "fa-solid fa-house", url: "/" }}
-                model={[{ label: "Usuarios" }]}
-                pt={{ root: { className: "border-0 bg-transparent" } }}
-            />
+            <nav className="grow"></nav>
             <nav className="w-52 shrink-0 flex justify-end gap-1">
                 <button
                     onClick={() => appCtx.mostrarError("Opción no implementada")}
