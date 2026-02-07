@@ -4,19 +4,51 @@ import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
 import { OverlayPanel } from "primereact/overlaypanel"
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
 import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
 import { type UsuarioModel } from "../../models/UsuarioModel"
 
-export const CrearCuenta = () => {
+interface EditarUsuarioProps {
+   id: number | string
+   onUpdate?: () => void
+}
+
+export const EditarUsuario = ({ id, onUpdate }: EditarUsuarioProps) => {
    const appCtx = useContext(AppContext)
    const [nombre, setNombre] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [confirPassword, setConfirPassword] = useState("")
    const [loading, setLoading] = useState(false)
+   const [originalUsuario, setOriginalUsuario] = useState<UsuarioModel | null>(null)
    const op = useRef<OverlayPanel>(null)
+
+   useEffect(() => {
+      const cargarUsuario = async () => {
+         try {
+            setLoading(true)
+            const usuario = await usuarioRepository.buscarPorId(id)
+            if (usuario) {
+               setOriginalUsuario(usuario)
+               setNombre(usuario.nombre)
+               setEmail(usuario.email)
+               // No cargamos el password por seguridad y para que se entienda que si lo deja vacio no se cambia
+            } else {
+               appCtx.mostrarError("Usuario no encontrado")
+            }
+         } catch (error) {
+            console.error(error)
+            appCtx.mostrarError("Error al cargar usuario")
+         } finally {
+            setLoading(false)
+         }
+      }
+
+      if (id) {
+         cargarUsuario()
+      }
+   }, [id, appCtx])
 
    const checkPasswordStrength = (pass: string) => {
       let score = 0
@@ -53,67 +85,62 @@ export const CrearCuenta = () => {
       return "text-green-300"
    }
 
-   const handleClickRegistrar = async () => {
+   const handleClickActualizar = async () => {
       if (!nombre.trim()) {
          appCtx.mostrarError("El nombre es obligatorio")
          return
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-         appCtx.mostrarError("Email no es válido")
-         return
-      }
+      if (!originalUsuario) return
 
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/
-      if (!passwordRegex.test(password)) {
-         const mensaje = `
-            Password debe tener: al menos una minúscula, 
-            al menos una mayúscula, al menos un número, 
-            al menos un caracter especial @$!%*?& y 
-            mínimo 7 caracteres
-         `
-         appCtx.mostrarError(mensaje)
-         return
-      }
+      // Si el password no esta vacio, validamos y actualizamos
+      if (password) {
+         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/
+         if (!passwordRegex.test(password)) {
+            const mensaje = `
+               Password debe tener: al menos una minúscula, 
+               al menos una mayúscula, al menos un número, 
+               al menos un caracter especial @$!%*?& y 
+               mínimo 7 caracteres
+            `
+            appCtx.mostrarError(mensaje)
+            return
+         }
 
-      if (password !== confirPassword) {
-         appCtx.mostrarError("Las contraseñas no coinciden")
-         return
+         if (password !== confirPassword) {
+            appCtx.mostrarError("Las contraseñas no coinciden")
+            return
+         }
       }
 
       setLoading(true)
 
       try {
-         const existe = await usuarioRepository.buscarPorEmail(email)
-         if (existe) {
-            appCtx.mostrarError("El correo ya se encuentra registrado")
-            setLoading(false)
-            return
-         }
-
-         const nuevoUsuario: UsuarioModel = {
+         const usuarioActualizado: UsuarioModel = {
+            ...originalUsuario,
             nombre,
-            email,
-            password,
-            fechaReg: new Date()
+            // Si password tiene valor lo actualizamos, sino mantenemos el anterior
+            password: password ? password : originalUsuario.password
          }
 
-         await usuarioRepository.agregar(nuevoUsuario)
-         appCtx.mostrarExito("Usuario creado exitosamente")
+         await usuarioRepository.actualizar(usuarioActualizado)
+         appCtx.mostrarExito("Usuario actualizado exitosamente")
 
-         setNombre("")
-         setEmail("")
+         if (onUpdate) onUpdate()
+
+         // Limpiamos campos de password
          setPassword("")
          setConfirPassword("")
 
       } catch (error) {
-         appCtx.mostrarError("Ocurrió un error al intentar registrar el usuario")
+         appCtx.mostrarError("Ocurrió un error al intentar actualizar el usuario")
          console.error(error)
       } finally {
          setLoading(false)
       }
    }
+
+   if (!originalUsuario && !loading) return null
 
    return (
       <div className="grid grid-cols-12 gap-2">
@@ -122,8 +149,8 @@ export const CrearCuenta = () => {
                <InputIcon className="fa-solid fa-envelope" />
                <InputText
                   placeholder="Email" value={email}
-                  disabled={loading} className="w-full"
-                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={true} className="w-full p-filled" // Read only
+                  readOnly
                />
             </IconField>
          </div>
@@ -143,8 +170,8 @@ export const CrearCuenta = () => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Password" value={password}
-                  disabled={loading} className="w-full"
+                  type="password" placeholder="Dejar en blanco para no cambiar"
+                  value={password} disabled={loading} className="w-full"
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={(e) => op.current?.show(e, e.target)}
                   onBlur={() => op.current?.hide()}
@@ -177,19 +204,21 @@ export const CrearCuenta = () => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Confirmar password" value={confirPassword}
-                  disabled={loading} className="w-full"
+                  type="password" placeholder="Confirmar nuevo password"
+                  value={confirPassword} disabled={loading || !password}
                   onChange={(e) => setConfirPassword(e.target.value)}
+                  className="w-full"
                />
             </IconField>
          </div>
 
          <div className="col-span-12 flex justify-end mt-3">
             <Button
-               label="Registrarme" icon="pi pi-user-plus"
-               loading={loading} onClick={handleClickRegistrar}
+               label="Actualizar" icon="pi pi-save"
+               loading={loading} onClick={handleClickActualizar}
             />
          </div>
       </div>
    )
 }
+

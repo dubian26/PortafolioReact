@@ -1,12 +1,14 @@
 import { FilterMatchMode } from "primereact/api"
 import { Column } from "primereact/column"
 import { DataTable, type DataTableFilterMeta } from "primereact/datatable"
+import { Dialog } from "primereact/dialog"
 import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
 import { Fragment, useEffect, useState } from "react"
 import { dateUtility } from "../appconfig/DateUtility"
 import { HeaderText } from "../components/common/HeaderText"
+import { EditarUsuario } from "../components/usuario/EditarUsuario"
 import { usuarioRepository } from "../db/repositories/UsuarioRepository"
 import { type UsuarioModel } from "../models/UsuarioModel"
 
@@ -17,6 +19,8 @@ export const UsuarioPage = () => {
    const [filters, setFilters] = useState<DataTableFilterMeta>({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
    })
+   const [editDialogVisible, setEditDialogVisible] = useState(false)
+   const [selectedUserId, setSelectedUserId] = useState<number | string | null>(null)
 
    const cargarUsuarios = async () => {
       try {
@@ -45,6 +49,21 @@ export const UsuarioPage = () => {
       setGlobalFilterValue(value)
    }
 
+   const handleAbrirEditarUsu = (id: number | string) => {
+      setSelectedUserId(id)
+      setEditDialogVisible(true)
+   }
+
+   const handleCerrarEditarUsu = () => {
+      setEditDialogVisible(false)
+      setSelectedUserId(null)
+   }
+
+   const handleUsuActualizado = () => {
+      handleCerrarEditarUsu()
+      cargarUsuarios()
+   }
+
    const renderHeader = () => {
       return (
          <div className="flex justify-between items-center flex-wrap gap-2">
@@ -61,6 +80,17 @@ export const UsuarioPage = () => {
          </div>
       )
    }
+
+   const actionBodyTemplate = (rowData: UsuarioModel) => (
+      <div className="flex gap-2">
+         <button
+            onClick={() => rowData.id && handleAbrirEditarUsu(rowData.id)}
+            className="
+               size-10 min-w-10 rounded-full cursor-pointer 
+               text-primary hover:bg-primary/10 fa-solid fa-pencil"
+         />
+      </div>
+   )
 
    return (
       <Fragment>
@@ -100,10 +130,34 @@ export const UsuarioPage = () => {
                   header="Fecha Registro"
                   body={rowData => dateUtility.formatFecha(rowData.fechaReg)}
                   sortable
-                  style={{ width: "25%" }}
+                  style={{ width: "15%" }}
+               />
+               <Column
+                  header="Acciones"
+                  body={actionBodyTemplate}
+                  exportable={false}
+                  style={{ width: "10%" }}
                />
             </DataTable>
          </div>
+
+         <Dialog
+            header={<HeaderText>Editar Usuario</HeaderText>}
+            visible={editDialogVisible}
+            style={{ width: "50vw" }}
+            breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+            onHide={handleCerrarEditarUsu}
+         >
+            {
+               selectedUserId && (
+                  <EditarUsuario
+                     id={selectedUserId}
+                     onUpdate={handleUsuActualizado}
+                  />
+               )
+            }
+         </Dialog>
       </Fragment>
    )
 }
+
