@@ -6,6 +6,7 @@ import { InputText } from "primereact/inputtext"
 import { useContext, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
 import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
+import { HeaderText } from "../common/HeaderText"
 import { CrearCuenta } from "../cuenta/CrearCuenta"
 
 export const LoginForm = () => {
@@ -77,7 +78,8 @@ export const LoginForm = () => {
                onClick={() => setVisible(true)}
             />
             <Dialog
-               header="Crear cuenta" visible={visible} className="w-10/12 md:w-3/4 xl:w-1/2"
+               header={<HeaderText>Crear cuenta</HeaderText>}
+               visible={visible} className="w-10/12 md:w-3/4 xl:w-1/2"
                onHide={() => { if (!visible) return; setVisible(false); }}>
                <CrearCuenta />
             </Dialog>
