@@ -9,7 +9,7 @@ import { Fragment, useEffect, useState } from "react"
 import { dateUtility } from "../appconfig/DateUtility"
 import { HeaderText } from "../components/common/HeaderText"
 import { EditarUsuario } from "../components/usuario/EditarUsuario"
-import { usuarioRepository } from "../db/repositories/UsuarioRepository"
+import { usuarioRepository } from "../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../models/UsuarioModel"
 
 export const UsuarioPage = () => {

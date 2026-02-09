@@ -1,7 +1,7 @@
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useRef } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { ConfigPanel } from "./ConfigPanel"
+import { PerfilDialog } from "./PerfilDialog"
 
 export const Topbar = () => {
     const appCtx = useContext(AppContext)
@@ -23,7 +23,7 @@ export const Topbar = () => {
                         size-10 min-w-10 rounded-full cursor-pointer 
                         text-primary hover:bg-primary/10 fa-regular fa-user"
                 />
-                <ConfigPanel ref={overlayUsua} />
+                <PerfilDialog ref={overlayUsua} />
             </nav>
         </div>
     )

@@ -6,15 +6,15 @@ import { InputText } from "primereact/inputtext"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
+import { usuarioRepository } from "../../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../../models/UsuarioModel"
 
-interface EditarUsuarioProps {
+type Props = {
    id: number | string
    onUpdate?: () => void
 }
 
-export const EditarUsuario = ({ id, onUpdate }: EditarUsuarioProps) => {
+export const EditarUsuario = ({ id, onUpdate }: Props) => {
    const appCtx = useContext(AppContext)
    const [nombre, setNombre] = useState("")
    const [email, setEmail] = useState("")
@@ -124,7 +124,7 @@ export const EditarUsuario = ({ id, onUpdate }: EditarUsuarioProps) => {
          }
 
          await usuarioRepository.actualizar(usuarioActualizado)
-         appCtx.mostrarExito("Usuario actualizado exitosamente")
+         appCtx.mostrarMensaje("Usuario actualizado exitosamente")
 
          if (onUpdate) onUpdate()
 

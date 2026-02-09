@@ -1,19 +1,30 @@
-import { type TokenModel } from "../../models/TokenModel"
-import { type UsuarioModel } from "../../models/UsuarioModel"
-import { authService } from "../../services/AuthService"
-import { type BaseDB } from "../core/BaseDB"
-import { dbProvider } from "../db.config"
+import { convert } from "../appconfig/Convert"
+import { type BaseDB } from "../db/BaseDB"
+import { dbProvider } from "../db/db.config"
+import { type ConfigModel } from "../models/ConfigModel"
+import { type TokenModel } from "../models/TokenModel"
+import { type UsuarioModel } from "../models/UsuarioModel"
+import { authService } from "../services/AuthService"
 
 class UsuarioRepository {
-   protected db: BaseDB
-   protected storeName: string
+   private db: BaseDB
+   private storeName: string
+   private config: ConfigModel | undefined
+   private mockDelayMs: number
 
    constructor() {
       this.db = dbProvider
       this.storeName = "usuarios"
+      this.mockDelayMs = 0
+   }
+
+   asignarConfig(config: ConfigModel) {
+      this.config = config
+      this.mockDelayMs = convert.toSeconds(config.mockRequestDelay) * 1000
    }
 
    async buscarPorEmail(email: string): Promise<UsuarioModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken() // me aseguro que accessToken sea vigente
       const store = await this.db.getStore(this.storeName)
       const index = store.index("email")
@@ -25,6 +36,7 @@ class UsuarioRepository {
    }
 
    async buscarPorId(id: number | string): Promise<UsuarioModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName)
       return new Promise((resolve, reject) => {
@@ -48,6 +60,8 @@ class UsuarioRepository {
          tipo: "access",
          nombre: usuario.nombre,
          email: usuario.email,
+         rol: "admin",
+         expTime: this.config?.expAccessToken || "15m",
          exp: 0
       })
 
@@ -56,6 +70,8 @@ class UsuarioRepository {
          tipo: "refresh",
          nombre: usuario.nombre,
          email: usuario.email,
+         rol: "admin",
+         expTime: this.config?.expRefreshToken || "1d",
          exp: 0
       })
 
@@ -66,6 +82,7 @@ class UsuarioRepository {
    }
 
    async listarTodos(): Promise<UsuarioModel[]> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName)
       return new Promise((resolve, reject) => {
@@ -76,6 +93,7 @@ class UsuarioRepository {
    }
 
    async agregar(item: UsuarioModel): Promise<number | string> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName, "readwrite")
       return new Promise((resolve, reject) => {
@@ -86,6 +104,7 @@ class UsuarioRepository {
    }
 
    async actualizar(item: UsuarioModel): Promise<void> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName, "readwrite")
       return new Promise((resolve, reject) => {

@@ -1,8 +1,8 @@
-import { BaseDB, type DBConfig } from "./core/BaseDB"
+import { BaseDB, type DBConfig } from "./BaseDB"
 
 const dbConfig: DBConfig = {
     name: "PortafolioDB",
-    version: 1,
+    version: 2,
     stores: [
         {
             name: "usuarios",
@@ -11,6 +11,11 @@ const dbConfig: DBConfig = {
             indexes: [
                 { name: "email", keyPath: "email", options: { unique: true } },
             ],
+        },
+        {
+            name: "config",
+            keyPath: "id",
+            autoIncrement: true,
         },
     ],
 }

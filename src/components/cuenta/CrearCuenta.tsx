@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useRef, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
+import { usuarioRepository } from "../../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../../models/UsuarioModel"
 
 export const CrearCuenta = () => {
@@ -100,7 +100,7 @@ export const CrearCuenta = () => {
          }
 
          await usuarioRepository.agregar(nuevoUsuario)
-         appCtx.mostrarExito("Usuario creado exitosamente")
+         appCtx.mostrarMensaje("Usuario creado exitosamente")
 
          setNombre("")
          setEmail("")

@@ -1,16 +1,20 @@
 import { Dialog } from "primereact/dialog"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { convert } from "../../appconfig/Convert"
 
 type Props = {
    onTimeout: () => void
-   warningSeconds: number
-   timeoutSeconds: number
+   avisarCuandoQuede: string
+   timeout: string
 }
 
-export const SessionTimeout = ({ onTimeout, warningSeconds, timeoutSeconds }: Props) => {
+export const SessionTimeout = ({ onTimeout, avisarCuandoQuede, timeout }: Props) => {
    const ultimaActividadRef = useRef(0)
    const [mostrarAviso, setMostrarAviso] = useState(false)
-   const [tiempoQueda, setTiempoQueda] = useState(timeoutSeconds)
+
+   const timeoutSeg = convert.toSeconds(timeout)
+   const avisarCuandoQuedeSeg = convert.toSeconds(avisarCuandoQuede)
+   const [tiempoQueda, setTiempoQueda] = useState(timeoutSeg)
 
    const restablecer = useCallback(() => {
       ultimaActividadRef.current = Date.now()
@@ -41,17 +45,17 @@ export const SessionTimeout = ({ onTimeout, warningSeconds, timeoutSeconds }: Pr
    const handleEvalTiempoTranscur = useCallback(() => {
       const now = Date.now()
       const transcurrido = Math.floor((now - ultimaActividadRef.current) / 1000)
-      const tiempoQueda = timeoutSeconds - transcurrido
+      const tiempoQuedaSeg = timeoutSeg - transcurrido
 
-      setTiempoQueda(tiempoQueda)
+      setTiempoQueda(tiempoQuedaSeg)
 
-      if (tiempoQueda <= warningSeconds)
+      if (tiempoQuedaSeg <= avisarCuandoQuedeSeg)
          setMostrarAviso(true)
 
-      if (tiempoQueda <= 0)
+      if (tiempoQuedaSeg <= 0)
          onTimeout()
 
-   }, [onTimeout, timeoutSeconds, warningSeconds])
+   }, [onTimeout, timeoutSeg, avisarCuandoQuedeSeg])
 
    useEffect(() => {
       const interval = setInterval(handleEvalTiempoTranscur, 1000)

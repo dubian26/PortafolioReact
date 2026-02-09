@@ -3,7 +3,7 @@ import { Card } from "primereact/card"
 import { Chart } from "primereact/chart"
 import { Fragment, useEffect, useState } from "react"
 import { HeaderText } from "../components/common/HeaderText"
-import { usuarioRepository } from "../db/repositories/UsuarioRepository"
+import { usuarioRepository } from "../repositories/UsuarioRepository"
 
 export const DashboardPage = () => {
    const [chartData, setChartData] = useState({})

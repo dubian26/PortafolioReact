@@ -3,25 +3,27 @@ import { Dialog } from "primereact/dialog"
 import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { usuarioRepository } from "../../db/repositories/UsuarioRepository"
+import { usuarioRepository } from "../../repositories/UsuarioRepository"
 import { HeaderText } from "../common/HeaderText"
 import { CrearCuenta } from "../cuenta/CrearCuenta"
 
 export const LoginForm = () => {
    // estados
-   const appCtx = useContext(AppContext)
+   const { config, mostrarError, validarUsuarioSes } = useContext(AppContext)
    const [loading, setLoading] = useState(false)
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [visible, setVisible] = useState(false)
 
+   useEffect(() => { usuarioRepository.asignarConfig(config) }, [config])
+
    // eventos
    const handleClickIngresar = async () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(email)) {
-         appCtx.mostrarError("Email no es válido")
+         mostrarError("Email no es válido")
          return
       }
 
@@ -32,9 +34,9 @@ export const LoginForm = () => {
          if (tokenModel === undefined) throw new Error("Usuario o password incorrecto")
          sessionStorage.accessToken = tokenModel.accessToken
          sessionStorage.refreshToken = tokenModel.refreshToken
-         await appCtx.validarUsuarioSes()
+         await validarUsuarioSes()
       } catch {
-         appCtx.mostrarError("Falló la autenticación")
+         mostrarError("Falló la autenticación")
       } finally {
          setLoading(false)
       }
@@ -65,7 +67,7 @@ export const LoginForm = () => {
          <div className="pt-4">
             <Button
                label="¿Olvidó su password?" link={true} size="small"
-               onClick={() => appCtx.mostrarError("Opción no implementada")}
+               onClick={() => mostrarError("Opción no implementada")}
             />
             <Button
                label="¿No tiene cuenta? Créela aquí" link={true} size="small"

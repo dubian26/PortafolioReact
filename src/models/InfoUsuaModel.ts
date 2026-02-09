@@ -4,6 +4,7 @@ export interface InfoUsuaModel {
     tipo: "access" | "refresh"
     nombre: string
     email: string
-    rol?: string
+    rol: string
+    expTime: string
     exp: number
 }
