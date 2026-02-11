@@ -18,7 +18,8 @@ export const Sidebar = ({ children }: Props) => {
       <aside
          style={{ backgroundImage: `url(${bgEscamas})` }}
          className={`
-            h-screen shrink-0 overflow-hidden transition-all
+            h-screen shrink-0 overflow-hidden transition-all 
+            shadow-[2px_0_4px_rgba(0,0,0,0.1)] z-50
             bg-no-repeat bg-auto ${expanded ? "w-72" : "w-16"}
          `}
       >
