@@ -6,6 +6,7 @@ import { SessionTimeout } from "../components/common/SessionTimeout"
 import { type ConfigModel } from "../models/ConfigModel"
 import { type InfoUsuaModel } from "../models/InfoUsuaModel"
 import { configRepository } from "../repositories/ConfigRepository"
+import { productoRepository } from "../repositories/ProductoRepository"
 import { authService } from "../services/AuthService"
 import { AppContext, defaultConfig } from "./AppContext"
 
@@ -35,6 +36,7 @@ export const AppProvider = ({ children }: Props) => {
 
    useEffect(() => { configRepository.asignarConfig(config) }, [config])
    useEffect(() => { cargarConfig() }, [cargarConfig])
+   useEffect(() => { productoRepository.seedDefaultProducts() }, [])
 
    const logout = useCallback(() => {
       setUsuarioSesion(null)
