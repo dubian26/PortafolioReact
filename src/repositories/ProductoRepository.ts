@@ -1,13 +1,83 @@
-import { BaseRepository } from "../db/BaseRepository"
+import { convert } from "../appconfig/Convert"
+import { type BaseDB } from "../db/BaseDB"
 import { dbProvider } from "../db/db.config"
+import { type ConfigModel } from "../models/ConfigModel"
 import { type ProductoModel } from "../models/ProductoModel"
+import { authService } from "../services/AuthService"
 
-class ProductoRepository extends BaseRepository<ProductoModel> {
+class ProductoRepository {
+   private db: BaseDB
+   private storeName: string
+   private mockDelayMs: number
+
    constructor() {
-      super(dbProvider, "productos")
+      this.db = dbProvider
+      this.storeName = "productos"
+      this.mockDelayMs = 0
+   }
+
+   asignarConfig(config: ConfigModel) {
+      this.mockDelayMs = convert.toSeconds(config.mockRequestDelay) * 1000
+   }
+
+   async agregar(item: ProductoModel): Promise<number | string> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName, "readwrite")
+      return new Promise((resolve, reject) => {
+         const request = store.add(item)
+         request.onsuccess = () => resolve(request.result as number | string)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async listarTodos(): Promise<ProductoModel[]> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName)
+      return new Promise((resolve, reject) => {
+         const request = store.getAll()
+         request.onsuccess = () => resolve(request.result as ProductoModel[])
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async buscarPorId(id: number | string): Promise<ProductoModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName)
+      return new Promise((resolve, reject) => {
+         const request = store.get(id)
+         request.onsuccess = () => resolve(request.result as ProductoModel)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async actualizar(item: ProductoModel): Promise<void> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName, "readwrite")
+      return new Promise((resolve, reject) => {
+         const request = store.put(item)
+         request.onsuccess = () => resolve()
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async eliminar(id: number | string): Promise<void> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName, "readwrite")
+      return new Promise((resolve, reject) => {
+         const request = store.delete(id)
+         request.onsuccess = () => resolve()
+         request.onerror = () => reject(request.error)
+      })
    }
 
    async buscarPorCodigo(codigo: string): Promise<ProductoModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
       const store = await this.db.getStore(this.storeName)
       const index = store.index("codigo")
       return new Promise((resolve, reject) => {
@@ -18,6 +88,7 @@ class ProductoRepository extends BaseRepository<ProductoModel> {
    }
 
    async seedDefaultProducts(): Promise<void> {
+      // No delay for seeding as it happens at startup and internal check is faster
       const currentProducts = await this.listarTodos()
       if (currentProducts.length > 0) return
 

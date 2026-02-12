@@ -4,19 +4,21 @@ import { IconField } from "primereact/iconfield"
 import { InputIcon } from "primereact/inputicon"
 import { InputText } from "primereact/inputtext"
 import { OverlayPanel } from "primereact/overlaypanel"
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { usuarioRepository } from "../../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../../models/UsuarioModel"
+import { usuarioRepository } from "../../repositories/UsuarioRepository"
 
 export const CrearCuenta = () => {
-   const appCtx = useContext(AppContext)
+   const { config, mostrarError, mostrarMensaje } = useContext(AppContext)
    const [nombre, setNombre] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [confirPassword, setConfirPassword] = useState("")
    const [loading, setLoading] = useState(false)
    const op = useRef<OverlayPanel>(null)
+
+   useEffect(() => { usuarioRepository.asignarConfig(config) }, [config])
 
    const checkPasswordStrength = (pass: string) => {
       let score = 0
@@ -55,13 +57,13 @@ export const CrearCuenta = () => {
 
    const handleClickRegistrar = async () => {
       if (!nombre.trim()) {
-         appCtx.mostrarError("El nombre es obligatorio")
+         mostrarError("El nombre es obligatorio")
          return
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(email)) {
-         appCtx.mostrarError("Email no es válido")
+         mostrarError("Email no es válido")
          return
       }
 
@@ -73,12 +75,12 @@ export const CrearCuenta = () => {
             al menos un caracter especial @$!%*?& y 
             mínimo 7 caracteres
          `
-         appCtx.mostrarError(mensaje)
+         mostrarError(mensaje)
          return
       }
 
       if (password !== confirPassword) {
-         appCtx.mostrarError("Las contraseñas no coinciden")
+         mostrarError("Las contraseñas no coinciden")
          return
       }
 
@@ -87,7 +89,7 @@ export const CrearCuenta = () => {
       try {
          const existe = await usuarioRepository.buscarPorEmail(email)
          if (existe) {
-            appCtx.mostrarError("El correo ya se encuentra registrado")
+            mostrarError("El correo ya se encuentra registrado")
             setLoading(false)
             return
          }
@@ -100,7 +102,7 @@ export const CrearCuenta = () => {
          }
 
          await usuarioRepository.agregar(nuevoUsuario)
-         appCtx.mostrarMensaje("Usuario creado exitosamente")
+         mostrarMensaje("Usuario creado exitosamente")
 
          setNombre("")
          setEmail("")
@@ -108,7 +110,7 @@ export const CrearCuenta = () => {
          setConfirPassword("")
 
       } catch (error) {
-         appCtx.mostrarError("Ocurrió un error al intentar registrar el usuario")
+         mostrarError("Ocurrió un error al intentar registrar el usuario")
          console.error(error)
       } finally {
          setLoading(false)

@@ -9,12 +9,16 @@ import { productoRepository } from "../../repositories/ProductoRepository"
 import { ProductoForm } from "./ProductoForm"
 
 export const ProductoList = () => {
-   const { mostrarError, mostrarMensaje } = useContext(AppContext)
+   const { config, mostrarError, mostrarMensaje } = useContext(AppContext)
    const [productos, setProductos] = useState<ProductoModel[]>([])
    const [productDialog, setProductDialog] = useState(false)
    const [deleteProductDialog, setDeleteProductDialog] = useState(false)
    const [producto, setProducto] = useState<ProductoModel | undefined>(undefined)
    const [loading, setLoading] = useState(false)
+
+   useEffect(() => {
+      productoRepository.asignarConfig(config)
+   }, [config])
 
    const cargarProductos = useCallback(async () => {
       try {

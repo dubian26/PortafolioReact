@@ -15,19 +15,28 @@ export const OrdenList = () => {
    const [ordenes, setOrdenes] = useState<Orden[]>([])
    const [factura, setFactura] = useState<Factura | null>(null)
    const [facturaDialog, setFacturaDialog] = useState(false)
-   const { usuarioSesion } = useContext(AppContext)
+   const { config, usuarioSesion } = useContext(AppContext)
+   const [loading, setLoading] = useState(false)
    const toast = useRef<Toast>(null)
+
+   useEffect(() => {
+      ordenRepository.asignarConfig(config)
+      facturaRepository.asignarConfig(config)
+   }, [config])
 
    useEffect(() => {
       const cargarOrdenes = async () => {
          if (usuarioSesion?.id) {
             try {
+               setLoading(true)
                const data = await ordenRepository.listarPorUsuario(usuarioSesion.id)
                // Ordenar por fecha descendente
                data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
                setOrdenes(data)
             } catch {
                toast.current?.show({ severity: "error", summary: "Error", detail: "No se pudieron cargar las ordenes", life: 3000 })
+            } finally {
+               setLoading(false)
             }
          }
       }
@@ -98,6 +107,7 @@ export const OrdenList = () => {
             paginator
             rows={10}
             stripedRows
+            loading={loading}
             emptyMessage="No has realizado ordenes aún."
             className="p-datatable-sm"
             pt={{

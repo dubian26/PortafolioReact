@@ -10,6 +10,7 @@ type Props = {
 export const CartProvider = ({ children }: Props) => {
    const [cart, setCart] = useState<CartItemModel[]>([])
    const [cartVisible, setCartVisible] = useState(false)
+   const [savingCart, setSavingCart] = useState(false)
    const [hasCheckoutHandler, setHasCheckoutHandler] = useState(false)
    const checkoutHandlerRef = useRef<(() => void) | null>(null)
 
@@ -57,15 +58,17 @@ export const CartProvider = ({ children }: Props) => {
       cart,
       total,
       cartVisible,
+      savingCart,
       hasCheckoutHandler,
       addToCart,
       removeFromCart,
       clearCart,
       setCartVisible,
+      setSavingCart,
       toggleCart,
       registerCheckoutHandler,
       executeCheckout
-   }), [cart, total, cartVisible, toggleCart, registerCheckoutHandler, executeCheckout, hasCheckoutHandler])
+   }), [cart, total, cartVisible, savingCart, toggleCart, registerCheckoutHandler, executeCheckout, hasCheckoutHandler])
 
    return (
       <CartContext.Provider value={value}>

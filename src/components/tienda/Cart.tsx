@@ -5,7 +5,7 @@ import { useCart } from "../../contexts/CartContext"
 import { type CartItemModel } from "../../models/CartItemModel"
 
 export const Cart = () => {
-   const { cart, removeFromCart, total, cartVisible, setCartVisible, executeCheckout, hasCheckoutHandler } = useCart()
+   const { cart, savingCart, removeFromCart, total, cartVisible, setCartVisible, executeCheckout, hasCheckoutHandler } = useCart()
    const navigate = useNavigate()
 
    const formatCurrency = (value: number) =>
@@ -57,7 +57,8 @@ export const Cart = () => {
 
          <button
             className="cart-item__remove-btn"
-            onClick={() => removeFromCart(item.id!)}
+            disabled={savingCart}
+            onClick={() => savingCart ? null : removeFromCart(item.id!)}
             title="Quitar del carrito"
          >
             <i className="fa-solid fa-trash-can"></i>
@@ -70,7 +71,7 @@ export const Cart = () => {
          <Sidebar
             visible={cartVisible}
             position="right"
-            onHide={() => setCartVisible(false)}
+            onHide={() => savingCart ? null : setCartVisible(false)}
             header={headerContent}
             className="cart-drawer"
          >
@@ -99,6 +100,7 @@ export const Cart = () => {
                      icon={hasCheckoutHandler ? "fa-solid fa-check" : "fa-solid fa-store"}
                      className="cart-drawer__checkout-btn w-full"
                      onClick={handleCheckoutClick}
+                     loading={savingCart}
                      disabled={cart.length === 0}
                   />
                </div>

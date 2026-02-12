@@ -1,7 +1,7 @@
 import { Button } from "primereact/button"
 import { Tag } from "primereact/tag"
 import { Toast } from "primereact/toast"
-import { useContext, useEffect, useRef, useState } from "react"
+import { Fragment, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { HeaderText } from "../components/common/HeaderText"
 import { AppContext } from "../contexts/AppContext"
 import { useCart } from "../contexts/CartContext"
@@ -13,21 +13,34 @@ import { ordenRepository } from "../repositories/OrdenRepository"
 import { productoRepository } from "../repositories/ProductoRepository"
 
 export const TiendaPage = () => {
+   const { config } = useContext(AppContext)
+   const [loading, setLoading] = useState(false)
    const [productos, setProductos] = useState<ProductoModel[]>([])
-   const { addToCart, cart, clearCart, total, setCartVisible, registerCheckoutHandler } = useCart()
+   const { addToCart, cart, clearCart, total, setSavingCart, setCartVisible, registerCheckoutHandler } = useCart()
    const { usuarioSesion } = useContext(AppContext)
    const toast = useRef<Toast>(null)
 
    useEffect(() => {
-      let ignore = false
-      productoRepository.listarTodos()
-         .then(data => {
-            if (!ignore) setProductos(data)
-         })
-         .catch(() => { })
-      return () => { ignore = true }
+      productoRepository.asignarConfig(config)
+      ordenRepository.asignarConfig(config)
+      facturaRepository.asignarConfig(config)
+   }, [config])
+
+   const cargarProductos = useCallback(async () => {
+      setLoading(true)
+      try {
+         const data = await productoRepository.listarTodos()
+         setProductos(data)
+      } catch {
+         toast.current?.show({ severity: "error", summary: "Error", detail: "No se pudieron cargar los productos", life: 3000 })
+      } finally {
+         setLoading(false)
+      }
    }, [])
 
+   useEffect(() => {
+      cargarProductos()
+   }, [cargarProductos])
 
    const handleAddToCart = (product: ProductoModel) => {
       if (product.stock > 0) {
@@ -61,6 +74,7 @@ export const TiendaPage = () => {
             }))
          }
 
+         setSavingCart(true)
          const ordenId = await ordenRepository.agregar(nuevaOrden)
 
          const nuevaFactura: Factura = {
@@ -91,6 +105,8 @@ export const TiendaPage = () => {
 
       } catch {
          toast.current?.show({ severity: "error", summary: "Error", detail: "Ocurrió un error al procesar la orden", life: 3000 })
+      } finally {
+         setSavingCart(false)
       }
    }
 
@@ -106,7 +122,7 @@ export const TiendaPage = () => {
    }
 
    return (
-      <div className="p-4">
+      <Fragment>
          <Toast ref={toast} />
          <div className="flex justify-between items-center flex-wrap gap-2 mb-4">
             <HeaderText>Tienda Virtual</HeaderText>
@@ -137,76 +153,85 @@ export const TiendaPage = () => {
          </div>
 
          <div className="tienda-grid">
-            {productos.map(product => (
-               <div key={product.id} className="tienda-card">
-                  {/* Gradient accent top */}
-                  <div className="tienda-card__accent"></div>
+            {
+               loading ?
+                  <div className="flex justify-center items-center h-full">
+                     Cargando productos...
+                  </div>
+                  :
+                  productos.map(product => (
+                     <div key={product.id} className="tienda-card">
+                        {/* Gradient accent top */}
+                        <div className="tienda-card__accent"></div>
 
-                  {/* Header: Category + Stock Tag */}
-                  <div className="tienda-card__header">
-                     <div className="tienda-card__category">
-                        <i className="fa-solid fa-tag" style={{ color: "var(--cyan-400)", fontSize: "0.75rem" }}></i>
-                        <span>{product.categoria}</span>
+                        {/* Header: Category + Stock Tag */}
+                        <div className="tienda-card__header">
+                           <div className="tienda-card__category">
+                              <i className="fa-solid fa-tag" style={{ color: "var(--cyan-400)", fontSize: "0.75rem" }}></i>
+                              <span>{product.categoria}</span>
+                           </div>
+                           <Tag
+                              value={product.stock > 0 ? `${product.stock} uds` : "AGOTADO"}
+                              severity={product.stock > 0 ? "success" : "danger"}
+                              style={{ fontSize: "0.7rem" }}
+                           />
+                        </div>
+
+                        {/* Product Icon Placeholder */}
+                        <div className="tienda-card__icon-area">
+                           <div className="tienda-card__icon-circle">
+                              <i className="fa-solid fa-box-open" style={{ fontSize: "2rem", color: "var(--cyan-400)" }}></i>
+                           </div>
+                        </div>
+
+                        {/* Product Info */}
+                        <div className="tienda-card__body">
+                           <h3 className="tienda-card__name">{product.nombre}</h3>
+                           {product.descripcion && (
+                              <p className="tienda-card__desc">{product.descripcion}</p>
+                           )}
+                        </div>
+
+                        {/* Stock Bar */}
+                        <div className="tienda-card__stock-bar">
+                           <div
+                              className="tienda-card__stock-fill"
+                              style={{
+                                 width: `${Math.min((product.stock / 50) * 100, 100)}%`,
+                                 background: getStockColor(product.stock)
+                              }}
+                           ></div>
+                        </div>
+
+                        {/* Footer: Price + Add to Cart */}
+                        <div className="tienda-card__footer">
+                           <div className="tienda-card__price">
+                              <span className="tienda-card__price-symbol">$</span>
+                              <span className="tienda-card__price-value">
+                                 {product.precio.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                              </span>
+                           </div>
+                           <button
+                              className="tienda-card__add-btn"
+                              disabled={product.stock === 0}
+                              onClick={() => handleAddToCart(product)}
+                              title="Agregar al carrito"
+                           >
+                              <i className="fa-solid fa-cart-plus"></i>
+                           </button>
+                        </div>
                      </div>
-                     <Tag
-                        value={product.stock > 0 ? `${product.stock} uds` : "AGOTADO"}
-                        severity={product.stock > 0 ? "success" : "danger"}
-                        style={{ fontSize: "0.7rem" }}
-                     />
-                  </div>
+                  ))
+            }
 
-                  {/* Product Icon Placeholder */}
-                  <div className="tienda-card__icon-area">
-                     <div className="tienda-card__icon-circle">
-                        <i className="fa-solid fa-box-open" style={{ fontSize: "2rem", color: "var(--cyan-400)" }}></i>
-                     </div>
+            {
+               !loading && productos.length === 0 && (
+                  <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "3rem", color: "var(--text-color-secondary)" }}>
+                     <i className="fa-solid fa-store" style={{ fontSize: "3rem", marginBottom: "1rem", display: "block", opacity: 0.3 }}></i>
+                     <p>No hay productos disponibles</p>
                   </div>
-
-                  {/* Product Info */}
-                  <div className="tienda-card__body">
-                     <h3 className="tienda-card__name">{product.nombre}</h3>
-                     {product.descripcion && (
-                        <p className="tienda-card__desc">{product.descripcion}</p>
-                     )}
-                  </div>
-
-                  {/* Stock Bar */}
-                  <div className="tienda-card__stock-bar">
-                     <div
-                        className="tienda-card__stock-fill"
-                        style={{
-                           width: `${Math.min((product.stock / 50) * 100, 100)}%`,
-                           background: getStockColor(product.stock)
-                        }}
-                     ></div>
-                  </div>
-
-                  {/* Footer: Price + Add to Cart */}
-                  <div className="tienda-card__footer">
-                     <div className="tienda-card__price">
-                        <span className="tienda-card__price-symbol">$</span>
-                        <span className="tienda-card__price-value">
-                           {product.precio.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                        </span>
-                     </div>
-                     <button
-                        className="tienda-card__add-btn"
-                        disabled={product.stock === 0}
-                        onClick={() => handleAddToCart(product)}
-                        title="Agregar al carrito"
-                     >
-                        <i className="fa-solid fa-cart-plus"></i>
-                     </button>
-                  </div>
-               </div>
-            ))}
-
-            {productos.length === 0 && (
-               <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "3rem", color: "var(--text-color-secondary)" }}>
-                  <i className="fa-solid fa-store" style={{ fontSize: "3rem", marginBottom: "1rem", display: "block", opacity: 0.3 }}></i>
-                  <p>No hay productos disponibles</p>
-               </div>
-            )}
+               )
+            }
          </div>
 
          <style>{`
@@ -390,6 +415,6 @@ export const TiendaPage = () => {
                box-shadow: none;
             }
          `}</style>
-      </div>
+      </Fragment>
    )
 }
