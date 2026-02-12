@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom"
 import { Sidebar } from "../components/menu/Sidebar"
 import { SidebarItem } from "../components/menu/SidebarItem"
 import { Topbar } from "../components/menu/Topbar"
+import { Cart } from "../components/tienda/Cart"
 import { type MenuModel } from "../models/MenuModel"
 
 export const MenuPage = () => {
@@ -11,7 +12,8 @@ export const MenuPage = () => {
       { id: 3, icono: "fa-solid fa-user", texto: "Usuarios", alerta: false, ruta: "/usuarios" },
       { id: 4, icono: "fa-solid fa-warehouse", texto: "Inventario", alerta: false, ruta: "/inventario" },
       { id: 5, icono: "fa-solid fa-box", texto: "Ordenes", alerta: false, ruta: "/ordenes" },
-      { id: 6, icono: "fa-solid fa-receipt", texto: "Facturas", alerta: false, ruta: "/facturas" }
+      { id: 6, icono: "fa-solid fa-receipt", texto: "Facturas", alerta: false, ruta: "/facturas" },
+      { id: 7, icono: "fa-solid fa-store", texto: "Tienda", alerta: false, ruta: "/tienda" }
    ]
 
    return (
@@ -35,6 +37,9 @@ export const MenuPage = () => {
                <Outlet />
             </main>
          </div>
+         <Cart />
       </div>
    )
 }
+
+
