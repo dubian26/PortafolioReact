@@ -1,17 +1,17 @@
 import { Button } from "primereact/button"
-import { InputNumber } from "primereact/inputnumber"
+import { InputNumber, type InputNumberValueChangeEvent } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
 import { classNames } from "primereact/utils"
-import { useEffect, useState } from "react"
-import { type Producto } from "../../models/ProductoModel"
+import { useState } from "react"
+import { type ProductoModel } from "../../models/ProductoModel"
 
 interface Props {
-   producto?: Producto
-   onSave: (producto: Producto) => void
+   producto?: ProductoModel
+   onSave: (producto: ProductoModel) => void
    onCancel: () => void
 }
 
-const emptyProduct: Producto = {
+const emptyProduct: ProductoModel = {
    codigo: "",
    nombre: "",
    precio: 0,
@@ -21,24 +21,16 @@ const emptyProduct: Producto = {
 }
 
 export const ProductoForm = ({ producto, onSave, onCancel }: Props) => {
-   const [data, setData] = useState<Producto>(emptyProduct)
+   const [data, setData] = useState<ProductoModel>(producto || emptyProduct)
    const [submitted, setSubmitted] = useState(false)
-
-   useEffect(() => {
-      if (producto) {
-         setData(producto)
-      } else {
-         setData(emptyProduct)
-      }
-   }, [producto])
 
    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
       const val = (e.target && e.target.value) || ""
       setData(prev => ({ ...prev, [name]: val }))
    }
 
-   const onInputNumberChange = (e: any, name: string) => {
-      const val = e.value || 0
+   const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
+      const val = e.value ?? 0
       setData(prev => ({ ...prev, [name]: val }))
    }
 

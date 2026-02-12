@@ -1,7 +1,8 @@
 import { Button } from "primereact/button"
 import { Sidebar } from "primereact/sidebar"
 import { useNavigate } from "react-router-dom"
-import { type CartItem, useCart } from "../../contexts/CartContext"
+import { useCart } from "../../contexts/CartContext"
+import { type CartItemModel } from "../../models/CartItemModel"
 
 export const Cart = () => {
    const { cart, removeFromCart, total, cartVisible, setCartVisible, executeCheckout, hasCheckoutHandler } = useCart()
@@ -33,7 +34,7 @@ export const Cart = () => {
       </div>
    )
 
-   const renderItem = (item: CartItem) => (
+   const renderItem = (item: CartItemModel) => (
       <div key={item.id} className="cart-item">
          <div className="cart-item__icon-wrap">
             <i className="fa-solid fa-box-open cart-item__icon"></i>

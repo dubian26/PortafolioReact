@@ -7,32 +7,29 @@ import { AppContext } from "../contexts/AppContext"
 import { useCart } from "../contexts/CartContext"
 import { type Factura } from "../models/FacturaModel"
 import { type Orden } from "../models/OrdenModel"
-import { type Producto } from "../models/ProductoModel"
+import { type ProductoModel } from "../models/ProductoModel"
 import { facturaRepository } from "../repositories/FacturaRepository"
 import { ordenRepository } from "../repositories/OrdenRepository"
 import { productoRepository } from "../repositories/ProductoRepository"
 
 export const TiendaPage = () => {
-   const [productos, setProductos] = useState<Producto[]>([])
+   const [productos, setProductos] = useState<ProductoModel[]>([])
    const { addToCart, cart, clearCart, total, setCartVisible, registerCheckoutHandler } = useCart()
    const { usuarioSesion } = useContext(AppContext)
    const toast = useRef<Toast>(null)
 
-   const cargarProductos = async () => {
-      try {
-         const data = await productoRepository.listarTodos()
-         setProductos(data)
-      } catch {
-         // ignore
-      }
-   }
-
    useEffect(() => {
-      cargarProductos()
+      let ignore = false
+      productoRepository.listarTodos()
+         .then(data => {
+            if (!ignore) setProductos(data)
+         })
+         .catch(() => { })
+      return () => { ignore = true }
    }, [])
 
 
-   const handleAddToCart = (product: Producto) => {
+   const handleAddToCart = (product: ProductoModel) => {
       if (product.stock > 0) {
          addToCart(product, 1)
          toast.current?.show({ severity: "success", summary: "Agregado", detail: `${product.nombre} agregado al carrito`, life: 3000 })
@@ -69,7 +66,7 @@ export const TiendaPage = () => {
          const nuevaFactura: Factura = {
             ordenId: Number(ordenId),
             fecha: new Date(),
-            numeroFactura: `FAC-${Date.now()}`,
+            numeroFactura: `FAC-${ordenId}`,
             clienteNombre: usuarioSesion.nombre,
             clienteNit: "CF",
             total: total,
@@ -89,7 +86,7 @@ export const TiendaPage = () => {
          clearCart()
          setCartVisible(false)
 
-         cargarProductos()
+         productoRepository.listarTodos().then(setProductos).catch(() => { })
          toast.current?.show({ severity: "success", summary: "Compra Exitosa", detail: `Orden #${ordenId} creada`, life: 3000 })
 
       } catch {

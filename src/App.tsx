@@ -1,14 +1,13 @@
 import { useContext, useMemo } from "react"
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import { AppContext } from "./contexts/AppContext"
-import { CartProvider } from "./contexts/CartContext"
 import { ContenidoPage } from "./pages/ContenidoPage"
 import { DashboardPage } from "./pages/DashboardPage"
 import { InventarioPage } from "./pages/InventarioPage"
 import { LoginPage } from "./pages/LoginPage"
+import { MenuPage } from "./pages/MenuPage"
 import { OrdenesPage } from "./pages/OrdenesPage"
 import { TiendaPage } from "./pages/TiendaPage"
-import { MenuPage } from "./pages/MenuPage"
 import { UsuarioPage } from "./pages/UsuarioPage"
 
 export const App = () => {
@@ -68,9 +67,5 @@ export const App = () => {
       },
    ]), [estaAutenti])
 
-   return (
-      <CartProvider>
-         <RouterProvider router={router} />
-      </CartProvider>
-   )
+   return <RouterProvider router={router} />
 }

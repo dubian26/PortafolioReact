@@ -46,25 +46,40 @@ export const FacturaDetalle = ({ factura, onClose }: Props) => {
                </div>
             </div>
 
-            <DataTable value={factura.items} className="mt-4" showGridlines>
+            <DataTable
+               value={factura.items}
+               className="mt-4 p-datatable-sm"
+               showGridlines
+               pt={{
+                  header: { className: "bg-transparent border-b border-white/10" },
+                  wrapper: { className: "bg-transparent" },
+                  thead: { className: "bg-white/5" },
+                  column: {
+                     headerCell: { className: "bg-transparent text-gray-300 font-semibold border-b border-white/10 p-2" },
+                     bodyCell: { className: "text-gray-400 border-b border-white/5 p-2" }
+                  }
+               }}
+            >
                <Column field="productoNombre" header="Producto"></Column>
                <Column field="cantidad" header="Cantidad"></Column>
                <Column field="precioUnitario" header="Precio Unitario" body={priceBodyTemplate}></Column>
                <Column field="subtotal" header="Subtotal" body={subtotalBodyTemplate}></Column>
             </DataTable>
 
-            <div className="mt-4 no-print flex justify-content-end gap-2">
+            <div className="mt-4 no-print flex justify-end gap-2">
                {onClose && <Button label="Cerrar" icon="fa-solid fa-times" outlined onClick={onClose} />}
                <Button label="Imprimir" icon="fa-solid fa-print" onClick={handlePrint} />
             </div>
          </Panel>
-         <style>{`
+         <style>
+            {`
                 @media print {
                     .no-print { display: none; }
                     .p-panel-header { background-color: white !important; border: none !important; }
                     .p-panel-content { border: none !important; }
                 }
-            `}</style>
+            `}
+         </style>
       </div>
    )
 }

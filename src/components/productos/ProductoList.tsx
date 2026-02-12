@@ -2,32 +2,35 @@ import { Button } from "primereact/button"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { Dialog } from "primereact/dialog"
-import { Toast } from "primereact/toast"
-import { Toolbar } from "primereact/toolbar"
-import { useEffect, useRef, useState } from "react"
-import { type Producto } from "../../models/ProductoModel"
+import { Fragment, useCallback, useContext, useEffect, useState } from "react"
+import { AppContext } from "../../contexts/AppContext"
+import { type ProductoModel } from "../../models/ProductoModel"
 import { productoRepository } from "../../repositories/ProductoRepository"
 import { ProductoForm } from "./ProductoForm"
 
 export const ProductoList = () => {
-   const [productos, setProductos] = useState<Producto[]>([])
+   const { mostrarError, mostrarMensaje } = useContext(AppContext)
+   const [productos, setProductos] = useState<ProductoModel[]>([])
    const [productDialog, setProductDialog] = useState(false)
    const [deleteProductDialog, setDeleteProductDialog] = useState(false)
-   const [producto, setProducto] = useState<Producto | undefined>(undefined)
-   const toast = useRef<Toast>(null)
+   const [producto, setProducto] = useState<ProductoModel | undefined>(undefined)
+   const [loading, setLoading] = useState(false)
 
-   const cargarProductos = async () => {
+   const cargarProductos = useCallback(async () => {
       try {
+         setLoading(true)
          const data = await productoRepository.listarTodos()
          setProductos(data)
       } catch {
-         toast.current?.show({ severity: "error", summary: "Error", detail: "No se pudieron cargar los productos", life: 3000 })
+         mostrarError("No se pudieron cargar los productos")
+      } finally {
+         setLoading(false)
       }
-   }
+   }, [mostrarError])
 
    useEffect(() => {
       cargarProductos()
-   }, [])
+   }, [cargarProductos])
 
    const openNew = () => {
       setProducto(undefined)
@@ -39,99 +42,92 @@ export const ProductoList = () => {
       setDeleteProductDialog(false)
    }
 
-   const editProduct = (prod: Producto) => {
+   const editProduct = (prod: ProductoModel) => {
       setProducto({ ...prod })
       setProductDialog(true)
    }
 
-   const confirmDeleteProduct = (prod: Producto) => {
+   const confirmDeleteProduct = (prod: ProductoModel) => {
       setProducto(prod)
       setDeleteProductDialog(true)
    }
 
    const deleteProduct = async () => {
-      if (producto && producto.id) {
-         try {
-            await productoRepository.eliminar(producto.id)
-            setDeleteProductDialog(false)
-            setProducto(undefined)
-            toast.current?.show({ severity: "success", summary: "Exitoso", detail: "Producto Eliminado", life: 3000 })
-            cargarProductos()
-         } catch {
-            toast.current?.show({ severity: "error", summary: "Error", detail: "Error al eliminar", life: 3000 })
-         }
+      if (!producto?.id) return
+
+      try {
+         await productoRepository.eliminar(producto.id)
+         setDeleteProductDialog(false)
+         setProducto(undefined)
+         mostrarMensaje("Producto Eliminado")
+         cargarProductos()
+      } catch {
+         mostrarError("Error al eliminar el producto")
       }
    }
 
-   const saveProduct = async (prod: Producto) => {
+   const saveProduct = async (prod: ProductoModel) => {
       try {
          if (prod.id) {
             await productoRepository.actualizar(prod)
-            toast.current?.show({ severity: "success", summary: "Exitoso", detail: "Producto Actualizado", life: 3000 })
+            mostrarMensaje("Producto Actualizado")
          } else {
             await productoRepository.agregar(prod)
-            toast.current?.show({ severity: "success", summary: "Exitoso", detail: "Producto Creado", life: 3000 })
+            mostrarMensaje("Producto Creado")
          }
          setProductDialog(false)
          setProducto(undefined)
          cargarProductos()
       } catch {
-         toast.current?.show({ severity: "error", summary: "Error", detail: "Error al guardar", life: 3000 })
+         mostrarError("Error al guardar el producto")
       }
    }
 
-   const leftToolbarTemplate = () => {
-      return (
-         <div className="flex flex-wrap gap-2">
-            <Button label="Nuevo" icon="fa-solid fa-plus" severity="success" onClick={openNew} />
-         </div>
-      )
-   }
-
-   const actionBodyTemplate = (rowData: Producto) => {
+   const actionBodyTemplate = (rowData: ProductoModel) => {
       return (
          <div className="flex gap-2">
             <button
                onClick={() => editProduct(rowData)}
-               className="
+               title="Editar" className="
                   size-10 min-w-10 rounded-full cursor-pointer 
                   text-blue-500 hover:bg-blue-500/10 fa-solid fa-pencil"
-               title="Editar"
             />
             <button
                onClick={() => confirmDeleteProduct(rowData)}
-               className="
+               title="Eliminar" className=" 
                   size-10 min-w-10 rounded-full cursor-pointer 
                   text-red-500 hover:bg-red-500/10 fa-solid fa-trash"
-               title="Eliminar"
             />
          </div>
       )
    }
 
-   const priceBodyTemplate = (rowData: Producto) => {
+   const priceBodyTemplate = (rowData: ProductoModel) => {
       return rowData.precio.toLocaleString("en-US", { style: "currency", currency: "USD" })
    }
 
    const deleteProductDialogFooter = (
-      <>
+      <Fragment>
          <Button label="No" icon="fa-solid fa-times" outlined onClick={hideDialog} />
          <Button label="Si" icon="fa-solid fa-check" severity="danger" onClick={deleteProduct} />
-      </>
+      </Fragment>
    )
 
    return (
-      <div>
-         <Toast ref={toast} />
+      <Fragment>
          <div className="card">
-            <Toolbar className="mb-4 bg-transparent border-none p-0" left={leftToolbarTemplate}></Toolbar>
+            <div className="flex justify-end gap-2 mb-4">
+               <Button
+                  label="Nuevo"
+                  icon="fa-solid fa-cloud-arrow-up"
+                  onClick={openNew}
+               />
+            </div>
 
             <DataTable
-               value={productos}
-               dataKey="id"
-               paginator
-               rows={10}
-               rowsPerPageOptions={[5, 10, 25]}
+               loading={loading} value={productos}
+               dataKey="id" paginator={true}
+               rows={10} rowsPerPageOptions={[5, 10, 25]}
                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
                className="p-datatable-sm"
@@ -158,19 +154,20 @@ export const ProductoList = () => {
          </div>
 
          <Dialog visible={productDialog} style={{ width: "32rem" }} breakpoints={{ "960px": "75vw", "641px": "90vw" }} header="Detalle Producto" modal className="p-fluid" onHide={hideDialog}>
-            <ProductoForm producto={producto} onSave={saveProduct} onCancel={hideDialog} />
+            <ProductoForm key={producto?.id ?? "new"} producto={producto} onSave={saveProduct} onCancel={hideDialog} />
          </Dialog>
 
          <Dialog visible={deleteProductDialog} style={{ width: "32rem" }} breakpoints={{ "960px": "75vw", "641px": "90vw" }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDialog}>
             <div className="confirmation-content">
                <i className="fa-solid fa-triangle-exclamation mr-3" style={{ fontSize: "2rem" }} />
-               {producto && (
+               {
+                  producto &&
                   <span>
                      ¿Estás seguro que deseas eliminar <b>{producto.nombre}</b>?
                   </span>
-               )}
+               }
             </div>
          </Dialog>
-      </div>
+      </Fragment>
    )
 }

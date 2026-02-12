@@ -3,13 +3,16 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { App } from "./App"
 import { AppProvider } from "./contexts/AppProvider"
+import { CartProvider } from "./contexts/CartProvider"
 import "./index.css"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PrimeReactProvider value={{ ripple: true }}>
       <AppProvider>
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </AppProvider>
     </PrimeReactProvider>
   </StrictMode>
