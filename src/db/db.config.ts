@@ -7,8 +7,9 @@ const dbConfig: DBConfig = {
         {
             name: "usuarios",
             keyPath: "id",
-            autoIncrement: true,
+            autoIncrement: false,
             indexes: [
+                { name: "id", keyPath: "id", options: { unique: true } },
                 { name: "email", keyPath: "email", options: { unique: true } },
             ],
         },

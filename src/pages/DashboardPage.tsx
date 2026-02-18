@@ -30,7 +30,7 @@ export const DashboardPage = () => {
          setTotalUsers(users.length)
 
          const groupedData = users.reduce((acc: { [key: string]: number }, user) => {
-            const date = new Date(user.fechaReg).toISOString().split("T")[0]
+            const date = new Date(user.fechaCreacion).toISOString().split("T")[0]
             acc[date] = (acc[date] || 0) + 1
             return acc
          }, {})

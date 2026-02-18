@@ -26,4 +26,11 @@ export class FetchUtility {
          throw CustomError.fromFetch(fetchName)
       }
    }
+
+   static async getResponseData<T>(response: Response): Promise<T | undefined> {
+      if (response.status === 204) return undefined
+      const text = await response.text()
+      if (!text || text === "null") return undefined
+      return JSON.parse(text) as T
+   }
 }

@@ -10,7 +10,7 @@ export interface OrdenItem {
 
 export interface Orden {
    id?: number
-   usuarioId: number
+   usuarioId: string
    fecha: Date
    total: number
    estado: EstadoOrden

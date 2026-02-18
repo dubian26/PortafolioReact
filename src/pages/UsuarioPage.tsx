@@ -9,8 +9,8 @@ import { Fragment, useEffect, useState } from "react"
 import { dateUtility } from "../appconfig/DateUtility"
 import { HeaderText } from "../components/common/HeaderText"
 import { EditarUsuario } from "../components/usuario/EditarUsuario"
-import { usuarioRepository } from "../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../models/UsuarioModel"
+import { usuarioRepository } from "../repositories/UsuarioRepository"
 
 export const UsuarioPage = () => {
    const [usuarios, setUsuarios] = useState<UsuarioModel[]>([])
@@ -122,21 +122,21 @@ export const UsuarioPage = () => {
                   }
                }}
             >
-               <Column field="id" header="ID" sortable style={{ width: "10%" }} />
-               <Column field="nombre" header="Nombre" sortable style={{ width: "30%" }} />
-               <Column field="email" header="Correo Electrónico" sortable style={{ width: "35%" }} />
+               <Column field="nombres" header="Nombres" sortable style={{ width: "20%" }} />
+               <Column field="apellidos" header="Apellidos" sortable style={{ width: "20%" }} />
+               <Column field="email" header="Correo Electrónico" sortable style={{ width: "30%" }} />
                <Column
-                  field="fechaReg"
-                  header="Fecha Registro"
-                  body={rowData => dateUtility.formatFecha(rowData.fechaReg)}
+                  field="fechaCreacion"
+                  header="Fecha Creación"
+                  body={rowData => dateUtility.formatFecha(rowData.fechaCreacion)}
                   sortable
-                  style={{ width: "15%" }}
+                  style={{ width: "25%" }}
                />
                <Column
-                  header="Acciones"
+                  header=""
                   body={actionBodyTemplate}
                   exportable={false}
-                  style={{ width: "10%" }}
+                  style={{ width: "5%" }}
                />
             </DataTable>
          </div>

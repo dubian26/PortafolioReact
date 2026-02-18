@@ -11,7 +11,8 @@ import { usuarioRepository } from "../../repositories/UsuarioRepository"
 
 export const CrearCuenta = () => {
    const { config, mostrarError, mostrarMensaje } = useContext(AppContext)
-   const [nombre, setNombre] = useState("")
+   const [nombres, setNombres] = useState("")
+   const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [confirPassword, setConfirPassword] = useState("")
@@ -56,7 +57,7 @@ export const CrearCuenta = () => {
    }
 
    const handleClickRegistrar = async () => {
-      if (!nombre.trim()) {
+      if (!nombres.trim()) {
          mostrarError("El nombre es obligatorio")
          return
       }
@@ -95,16 +96,20 @@ export const CrearCuenta = () => {
          }
 
          const nuevoUsuario: UsuarioModel = {
-            nombre,
+            id: crypto.randomUUID().replaceAll("-", ""),
+            nombres: nombres,
+            apellidos: apellidos,
             email,
             password,
-            fechaReg: new Date()
+            rol: "cliente",
+            fechaCreacion: new Date()
          }
 
          await usuarioRepository.agregar(nuevoUsuario)
          mostrarMensaje("Usuario creado exitosamente")
 
-         setNombre("")
+         setNombres("")
+         setApellidos("")
          setEmail("")
          setPassword("")
          setConfirPassword("")
@@ -130,13 +135,24 @@ export const CrearCuenta = () => {
             </IconField>
          </div>
 
-         <div className="col-span-12">
+         <div className="col-span-12 md:col-span-6">
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-user" />
                <InputText
-                  placeholder="Nombre completo" value={nombre}
+                  placeholder="Nombres completo" value={nombres}
                   disabled={loading} className="w-full"
-                  onChange={(e) => setNombre(e.target.value)}
+                  onChange={(e) => setNombres(e.target.value)}
+               />
+            </IconField>
+         </div>
+
+         <div className="col-span-12 md:col-span-6">
+            <IconField iconPosition="left">
+               <InputIcon className="fa-solid fa-user" />
+               <InputText
+                  placeholder="Apellidos completo" value={apellidos}
+                  disabled={loading} className="w-full"
+                  onChange={(e) => setApellidos(e.target.value)}
                />
             </IconField>
          </div>

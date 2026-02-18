@@ -35,7 +35,8 @@ export const LoginForm = () => {
          sessionStorage.accessToken = tokenModel.accessToken
          sessionStorage.refreshToken = tokenModel.refreshToken
          await validarUsuarioSes()
-      } catch {
+      } catch (error) {
+         console.error(error)
          mostrarError("Falló la autenticación")
       } finally {
          setLoading(false)

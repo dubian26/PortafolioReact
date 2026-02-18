@@ -6,8 +6,8 @@ import { InputText } from "primereact/inputtext"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../../contexts/AppContext"
-import { usuarioRepository } from "../../repositories/UsuarioRepository"
 import { type UsuarioModel } from "../../models/UsuarioModel"
+import { usuarioRepository } from "../../repositories/UsuarioRepository"
 
 type Props = {
    id: number | string
@@ -16,7 +16,8 @@ type Props = {
 
 export const EditarUsuario = ({ id, onUpdate }: Props) => {
    const appCtx = useContext(AppContext)
-   const [nombre, setNombre] = useState("")
+   const [nombres, setNombres] = useState("")
+   const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [confirPassword, setConfirPassword] = useState("")
@@ -31,7 +32,8 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
             const usuario = await usuarioRepository.buscarPorId(id)
             if (usuario) {
                setOriginalUsuario(usuario)
-               setNombre(usuario.nombre)
+               setNombres(usuario.nombres)
+               setApellidos(usuario.apellidos)
                setEmail(usuario.email)
                // No cargamos el password por seguridad y para que se entienda que si lo deja vacio no se cambia
             } else {
@@ -86,8 +88,13 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
    }
 
    const handleClickActualizar = async () => {
-      if (!nombre.trim()) {
+      if (!nombres.trim()) {
          appCtx.mostrarError("El nombre es obligatorio")
+         return
+      }
+
+      if (!apellidos.trim()) {
+         appCtx.mostrarError("El apellido es obligatorio")
          return
       }
 
@@ -118,7 +125,8 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
       try {
          const usuarioActualizado: UsuarioModel = {
             ...originalUsuario,
-            nombre,
+            nombres: nombres,
+            apellidos: apellidos,
             // Si password tiene valor lo actualizamos, sino mantenemos el anterior
             password: password ? password : originalUsuario.password
          }
@@ -155,13 +163,24 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
             </IconField>
          </div>
 
-         <div className="col-span-12">
+         <div className="col-span-12 md:col-span-6">
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-user" />
                <InputText
-                  placeholder="Nombre completo" value={nombre}
+                  placeholder="Nombres" value={nombres}
                   disabled={loading} className="w-full"
-                  onChange={(e) => setNombre(e.target.value)}
+                  onChange={(e) => setNombres(e.target.value)}
+               />
+            </IconField>
+         </div>
+
+         <div className="col-span-12 md:col-span-6">
+            <IconField iconPosition="left">
+               <InputIcon className="fa-solid fa-user" />
+               <InputText
+                  placeholder="Apellidos" value={apellidos}
+                  disabled={loading} className="w-full"
+                  onChange={(e) => setApellidos(e.target.value)}
                />
             </IconField>
          </div>

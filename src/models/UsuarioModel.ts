@@ -1,7 +1,9 @@
 export interface UsuarioModel {
-    id?: number
+    id: string
     email: string
     password: string
-    nombre: string
-    fechaReg: Date
+    nombres: string
+    apellidos: string
+    rol: string
+    fechaCreacion: Date
 }

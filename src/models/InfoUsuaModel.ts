@@ -1,6 +1,6 @@
 
 export interface InfoUsuaModel {
-    id: number
+    id: string
     tipo: "access" | "refresh"
     nombre: string
     email: string
