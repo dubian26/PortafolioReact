@@ -105,7 +105,7 @@ export const CrearCuenta = () => {
             fechaCreacion: new Date()
          }
 
-         await usuarioRepository.agregar(nuevoUsuario)
+         await usuarioRepository.crearCuenta(nuevoUsuario)
          mostrarMensaje("Usuario creado exitosamente")
 
          setNombres("")

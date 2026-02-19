@@ -23,29 +23,6 @@ export class UsuarioLocalRepository {
       this.mockDelayMs = convert.toSeconds(config.mockRequestDelay) * 1000
    }
 
-   async buscarPorEmail(email: string): Promise<UsuarioModel | undefined> {
-      await new Promise(r => setTimeout(r, this.mockDelayMs))
-      await authService.renovarToken() // me aseguro que accessToken sea vigente
-      const store = await this.db.getStore(this.storeName)
-      const index = store.index("email")
-      return new Promise((resolve, reject) => {
-         const request = index.get(email)
-         request.onsuccess = () => resolve(request.result as UsuarioModel)
-         request.onerror = () => reject(request.error)
-      })
-   }
-
-   async buscarPorId(id: number | string): Promise<UsuarioModel | undefined> {
-      await new Promise(r => setTimeout(r, this.mockDelayMs))
-      await authService.renovarToken()
-      const store = await this.db.getStore(this.storeName)
-      return new Promise((resolve, reject) => {
-         const request = store.get(id)
-         request.onsuccess = () => resolve(request.result as UsuarioModel)
-         request.onerror = () => reject(request.error)
-      })
-   }
-
    async autenticar(email: string, password: string): Promise<TokenModel | undefined> {
       // Simular autenticacion:
       // este metodo en produccion tendria que consumir un end-point
@@ -81,6 +58,29 @@ export class UsuarioLocalRepository {
       }
    }
 
+   async buscarPorEmail(email: string): Promise<UsuarioModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName)
+      const index = store.index("email")
+      return new Promise((resolve, reject) => {
+         const request = index.get(email)
+         request.onsuccess = () => resolve(request.result as UsuarioModel)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
+   async buscarPorId(id: string): Promise<UsuarioModel | undefined> {
+      await new Promise(r => setTimeout(r, this.mockDelayMs))
+      await authService.renovarToken()
+      const store = await this.db.getStore(this.storeName)
+      return new Promise((resolve, reject) => {
+         const request = store.get(id)
+         request.onsuccess = () => resolve(request.result as UsuarioModel)
+         request.onerror = () => reject(request.error)
+      })
+   }
+
    async listarTodos(): Promise<UsuarioModel[]> {
       await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
@@ -92,13 +92,13 @@ export class UsuarioLocalRepository {
       })
    }
 
-   async agregar(item: UsuarioModel): Promise<number | string> {
+   async crearCuenta(item: UsuarioModel): Promise<string> {
       await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName, "readwrite")
       return new Promise((resolve, reject) => {
          const request = store.add(item)
-         request.onsuccess = () => resolve(request.result as number | string)
+         request.onsuccess = () => resolve(request.result as string)
          request.onerror = () => reject(request.error)
       })
    }
