@@ -1,7 +1,7 @@
 import { BaseDB, type DBConfig } from "./BaseDB"
 
 const dbConfig: DBConfig = {
-    name: "PortafolioDB",
+    name: "TiendaOnlineDB",
     version: 3,
     stores: [
         {
