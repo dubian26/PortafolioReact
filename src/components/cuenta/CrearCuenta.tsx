@@ -166,6 +166,8 @@ export const CrearCuenta = () => {
                   type={showPassword ? "text" : "password"} placeholder="Password" value={password}
                   disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={(e) => op.current?.show(e, e.target)}
+                  onBlur={() => op.current?.hide()}
                />
                <InputIcon
                   className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}

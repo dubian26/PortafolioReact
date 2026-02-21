@@ -192,7 +192,7 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
                <InputIcon className="fa-solid fa-lock" />
                <InputText
                   type={showPassword ? "text" : "password"} placeholder="Dejar en blanco para no cambiar"
-                  value={password} disabled={loading} className="w-full"
+                  value={password} disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={(e) => op.current?.show(e, e.target)}
                   onBlur={() => op.current?.hide()}
