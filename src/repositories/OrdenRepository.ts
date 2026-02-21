@@ -75,7 +75,7 @@ class OrdenRepository {
       })
    }
 
-   async listarPorUsuario(usuarioId: number): Promise<Orden[]> {
+   async listarPorUsuario(usuarioId: string): Promise<Orden[]> {
       await new Promise(r => setTimeout(r, this.mockDelayMs))
       await authService.renovarToken()
       const store = await this.db.getStore(this.storeName)

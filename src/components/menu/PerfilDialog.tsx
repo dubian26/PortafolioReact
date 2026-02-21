@@ -80,7 +80,7 @@ export const PerfilDialog = ({ ref }: Props) => {
             onHide={handleCerrarEditarUsu}
          >
             <EditarUsuario
-               id={usuarioSesion?.id ?? 0}
+               id={usuarioSesion?.id ?? ""}
                onUpdate={handleUsuActualizado}
             />
          </Dialog>
