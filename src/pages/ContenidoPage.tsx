@@ -36,7 +36,9 @@ export const ContenidoPage = () => {
       },
       {
          descripcion: "Gestión centralizada de autenticación " +
-            "y configuración global mediante Context API",
+            "y control de estado global mediante Context API " +
+            "(mostrar mensajes, configuración de parámetros, " +
+            "botón de carrito, etc.)",
          fecha: "2026-01-21"
       },
       {
@@ -50,12 +52,12 @@ export const ContenidoPage = () => {
       <Fragment>
          <HeaderText>Contenido</HeaderText>
          <p className="text-lg mb-4">
-            Esta aplicación es una <b>demo</b> de un sistema de inventario
-            para tiendas virtuales. Su objetivo es demostrar mis capacidades
+            Esta aplicación es una <strong>demostración</strong> de un sistema de inventario
+            para tiendas virtuales. Su objetivo es mostrar algunas de mis habilidades
             técnicas y experiencia como ingeniero de sistemas en el desarrollo
             de aplicaciones web modernas.&nbsp;
             <a
-               href="https://github.com/dubian26/PortafolioReact"
+               href="https://github.com/dubian26/demo-tienda-online-react"
                target="_blank" rel="noopener noreferrer"
                className="underline font-bold">
                Ir al repositorio GitHub.

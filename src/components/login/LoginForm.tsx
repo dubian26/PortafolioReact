@@ -16,6 +16,7 @@ export const LoginForm = () => {
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
    const [visible, setVisible] = useState(false)
+   const [showPassword, setShowPassword] = useState(false)
 
    useEffect(() => { usuarioRepository.asignarConfig(config) }, [config])
 
@@ -56,9 +57,14 @@ export const LoginForm = () => {
          <IconField iconPosition="left">
             <InputIcon className="fa-solid fa-lock" />
             <InputText
-               type="password" placeholder="Password" value={password}
-               disabled={loading} className="w-full"
+               type={showPassword ? "text" : "password"} placeholder="Password" value={password}
+               disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
                onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputIcon
+               className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
+               style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
+               onClick={() => setShowPassword(!showPassword)}
             />
          </IconField>
          <Button

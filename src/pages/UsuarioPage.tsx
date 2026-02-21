@@ -20,7 +20,7 @@ export const UsuarioPage = () => {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
    })
    const [editDialogVisible, setEditDialogVisible] = useState(false)
-   const [selectedUserId, setSelectedUserId] = useState<number | string | null>(null)
+   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
 
    const cargarUsuarios = async () => {
       try {
@@ -49,7 +49,7 @@ export const UsuarioPage = () => {
       setGlobalFilterValue(value)
    }
 
-   const handleAbrirEditarUsu = (id: number | string) => {
+   const handleAbrirEditarUsu = (id: string) => {
       setSelectedUserId(id)
       setEditDialogVisible(true)
    }

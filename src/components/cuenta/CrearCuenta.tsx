@@ -15,7 +15,9 @@ export const CrearCuenta = () => {
    const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
+   const [showPassword, setShowPassword] = useState(false)
    const [confirPassword, setConfirPassword] = useState("")
+   const [showConfirPassword, setShowConfirPassword] = useState(false)
    const [loading, setLoading] = useState(false)
    const op = useRef<OverlayPanel>(null)
 
@@ -161,11 +163,14 @@ export const CrearCuenta = () => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Password" value={password}
-                  disabled={loading} className="w-full"
+                  type={showPassword ? "text" : "password"} placeholder="Password" value={password}
+                  disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
                   onChange={(e) => setPassword(e.target.value)}
-                  onFocus={(e) => op.current?.show(e, e.target)}
-                  onBlur={() => op.current?.hide()}
+               />
+               <InputIcon
+                  className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
+                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
+                  onClick={() => setShowPassword(!showPassword)}
                />
             </IconField>
             <OverlayPanel ref={op}>
@@ -195,9 +200,15 @@ export const CrearCuenta = () => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Confirmar password" value={confirPassword}
-                  disabled={loading} className="w-full"
+                  type={showConfirPassword ? "text" : "password"}
+                  placeholder="Confirmar password" value={confirPassword}
+                  disabled={loading} className="w-full" style={{ paddingRight: "2.5rem" }}
                   onChange={(e) => setConfirPassword(e.target.value)}
+               />
+               <InputIcon
+                  className={`fa-solid ${showConfirPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
+                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
+                  onClick={() => setShowConfirPassword(!showConfirPassword)}
                />
             </IconField>
          </div>

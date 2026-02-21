@@ -10,7 +10,7 @@ import { type UsuarioModel } from "../../models/UsuarioModel"
 import { usuarioRepository } from "../../repositories/UsuarioRepository"
 
 type Props = {
-   id: number | string
+   id: string
    onUpdate?: () => void
 }
 
@@ -20,7 +20,9 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
    const [apellidos, setApellidos] = useState("")
    const [email, setEmail] = useState("")
    const [password, setPassword] = useState("")
+   const [showPassword, setShowPassword] = useState(false)
    const [confirPassword, setConfirPassword] = useState("")
+   const [showConfirPassword, setShowConfirPassword] = useState(false)
    const [loading, setLoading] = useState(false)
    const [originalUsuario, setOriginalUsuario] = useState<UsuarioModel | null>(null)
    const op = useRef<OverlayPanel>(null)
@@ -189,11 +191,16 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Dejar en blanco para no cambiar"
+                  type={showPassword ? "text" : "password"} placeholder="Dejar en blanco para no cambiar"
                   value={password} disabled={loading} className="w-full"
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={(e) => op.current?.show(e, e.target)}
                   onBlur={() => op.current?.hide()}
+               />
+               <InputIcon
+                  className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
+                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
+                  onClick={() => setShowPassword(!showPassword)}
                />
             </IconField>
             <OverlayPanel ref={op}>
@@ -223,10 +230,15 @@ export const EditarUsuario = ({ id, onUpdate }: Props) => {
             <IconField iconPosition="left">
                <InputIcon className="fa-solid fa-lock" />
                <InputText
-                  type="password" placeholder="Confirmar nuevo password"
+                  type={showConfirPassword ? "text" : "password"} placeholder="Confirmar nuevo password"
                   value={confirPassword} disabled={loading || !password}
                   onChange={(e) => setConfirPassword(e.target.value)}
                   className="w-full"
+               />
+               <InputIcon
+                  className={`fa-solid ${showConfirPassword ? "fa-eye-slash" : "fa-eye"} cursor-pointer`}
+                  style={{ position: "absolute", right: "0.75rem", cursor: "pointer" }}
+                  onClick={() => setShowConfirPassword(!showConfirPassword)}
                />
             </IconField>
          </div>

@@ -1,2 +1,2 @@
-import { AuthApiService } from "./AuthApiService"
-export const authService = new AuthApiService()
+import { AuthLocalService } from "./AuthLocalService"
+export const authService = new AuthLocalService()
